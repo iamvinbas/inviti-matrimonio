@@ -44,7 +44,9 @@ window.WEDDING = {
   dressCode: "Elegante — formale",
 
   // RSVP: numero WhatsApp in formato internazionale SENZA + e senza spazi
-  rsvpWhatsApp: "393331234567",
+  // Vuoto = WhatsApp si apre senza destinatario (sicuro per la bozza).
+  // Metti qui il numero vero prima di inviare gli inviti: prefisso senza + ne spazi, es. "393401234567"
+  rsvpWhatsApp: "",
   rsvpEntro: "30 Aprile 2027",
 
   // Lista nozze / IBAN (opzionale: metti "" per nascondere la sezione)
