@@ -32,6 +32,7 @@ Conseguenze:
 | `assets/config.js` | **dati del matrimonio** — date, luoghi, IBAN, numero WhatsApp |
 | `tools/invitati.csv` | **elenco invitati** (privato, non su GitHub) |
 | `tools/genera.mjs` | genera i link personalizzati |
+| `tools/pubblica.sh` | pubblica su GitHub Pages gestendo la cache |
 | `tools/link-generati.csv` | output: link + messaggio WhatsApp per ogni invitato (privato) |
 
 ## 1. Dati del matrimonio
@@ -67,14 +68,23 @@ si apre già con il messaggio scritto e il destinatario giusto.
 ## 3. Pubblicare gli aggiornamenti
 
 ```bash
-git add -A && git commit -m "aggiorna dati" && git push
+./tools/pubblica.sh "aggiorna i luoghi"
 ```
 
-GitHub Pages ricostruisce in circa un minuto.
+Lo script alza il numero `?v=` in `index.html`, fa commit e push, poi aspetta
+che il deploy sia davvero online e lo verifica.
 
-**Se modifichi CSS o JS**, alza di 1 il numero `?v=` nei tag di `index.html`
-(`?v=4` → `?v=5`): GitHub Pages serve gli asset con `cache-control: max-age=600`,
-senza il cambio di versione gli invitati vedrebbero la vecchia copia per 10 minuti.
+Il passaggio sul `?v=` non è facoltativo: GitHub Pages serve gli asset con
+`cache-control: max-age=600`, quindi senza cambio di versione il browser
+continua a usare la copia vecchia di `config.js` per 10 minuti e **le modifiche
+sembrano non essere arrivate** anche se il push è andato a buon fine.
+
+A mano sarebbe:
+
+```bash
+# alza ?v=N in index.html, poi
+git add -A && git commit -m "aggiorna dati" && git push
+```
 
 ## 4. Anteprima in locale
 
