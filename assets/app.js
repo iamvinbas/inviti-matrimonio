@@ -212,7 +212,35 @@
   }, { threshold: 0.18 });
   document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
 
-  /* ---------- 9. Petali dorati ---------- */
+  /* ---------- 9. Firma dell'autore ---------- */
+  (function credito() {
+    const a = W.autore;
+    if (!a || !a.nome) return;
+
+    const icone = {
+      linkedin: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1-.02 5 2.5 2.5 0 0 1 .02-5zM3 9h4v12H3V9zm6.5 0h3.8v1.64h.05c.53-.95 1.83-1.95 3.77-1.95 4.03 0 4.78 2.5 4.78 5.76V21h-4v-5.8c0-1.38-.03-3.17-1.97-3.17-1.97 0-2.27 1.5-2.27 3.06V21h-4V9z"/></svg>',
+      instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>',
+      whatsapp: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.1-.2 0-.4.1-.5l.5-.6c.1-.2.1-.3 0-.5l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.7.7-1 1.6-.9 2.5.3 1.6 1.2 3 2.6 4.2 1.6 1.4 3.3 2.1 4.4 2.1.8 0 1.6-.3 2.2-.9.2-.3.3-.6.3-.9v-.5c0-.2-.1-.3-.3-.4z"/></svg>',
+      email: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg>'
+    };
+
+    const link = [];
+    if (a.linkedin) link.push(["LinkedIn", a.linkedin, icone.linkedin]);
+    if (a.instagram) link.push(["Instagram", a.instagram, icone.instagram]);
+    if (a.whatsapp) link.push(["WhatsApp", "https://wa.me/" + a.whatsapp, icone.whatsapp]);
+    if (a.email) link.push(["Email", "mailto:" + a.email, icone.email]);
+
+    const el = $("#credito");
+    el.innerHTML =
+      `<p class="credito-testo">${a.testo || "Realizzato da"}<br><strong>${a.nome}</strong></p>` +
+      (link.length
+        ? `<div class="credito-link">${link.map(([n, u, i]) =>
+            `<a href="${u}" target="_blank" rel="noopener noreferrer" aria-label="${n}" title="${n}">${i}</a>`).join("")}</div>`
+        : "");
+    el.hidden = false;
+  })();
+
+  /* ---------- 10. Petali dorati ---------- */
   function petali() {
     const c = $("#petals"), x = c.getContext("2d");
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;

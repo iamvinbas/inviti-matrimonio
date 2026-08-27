@@ -58,4 +58,15 @@ window.WEDDING = {
   },
 
   hashtag: "#Tiziana&Gaetano2027",
+
+  /* Firma di chi ha realizzato l'invito. Per toglierla: autore: null
+     whatsapp/email vuoti = non mostrati. WhatsApp = prefisso senza + ne spazi. */
+  autore: {
+    testo: "Invito realizzato da",
+    nome: "Vincenzo Basile",
+    linkedin: "https://www.linkedin.com/in/basile-vincenzo/",
+    instagram: "https://www.instagram.com/basile_vinc3nzo/",
+    email: "",
+    whatsapp: ""
+  },
 };

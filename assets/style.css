@@ -315,3 +315,32 @@ body.no-scroll{overflow:hidden;height:100svh}
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms !important;transition-duration:.18s !important}
 }
+
+/* firma di chi ha realizzato l'invito — deve restare discreta */
+.credito{
+  margin-top:4.5rem;padding-top:2rem;text-align:center;
+  border-top:1px solid rgba(227,200,111,.12);
+  opacity:0;transform:translateY(18px);
+  transition:opacity .9s ease, transform .9s ease;
+}
+.credito.visto{opacity:.55;transform:none}
+.credito:hover,.credito:focus-within{opacity:.9}
+.credito-testo{
+  margin:0 0 .9rem;font-size:.8rem;line-height:1.7;color:var(--avorio);
+}
+.credito-testo strong{
+  display:inline-block;font-weight:400;
+  font-family:var(--titolo);text-transform:uppercase;
+  letter-spacing:.22em;font-size:.72rem;color:var(--oro-chiaro);
+  margin-top:.2rem;
+}
+.credito-link{display:flex;justify-content:center;gap:1.1rem}
+.credito-link a{
+  display:grid;place-items:center;width:34px;height:34px;
+  border:1px solid rgba(227,200,111,.28);border-radius:50%;
+  color:var(--oro-chiaro);
+  transition:background .25s ease, color .25s ease, transform .25s ease;
+}
+.credito-link a:hover{background:var(--oro);color:#14201a;transform:translateY(-2px)}
+.credito-link a:focus-visible{outline:2px solid var(--oro-chiaro);outline-offset:3px}
+.credito-link svg{width:16px;height:16px}
