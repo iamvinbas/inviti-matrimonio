@@ -129,12 +129,7 @@
     toast("Evento scaricato");
   });
 
-  /* ---------- 6. Condividi + copia IBAN ---------- */
-  $("#btnShare").addEventListener("click", async () => {
-    const dati = { title: `Matrimonio di ${W.sposa} e ${W.sposo}`, text: "Ti invitiamo!", url: location.href };
-    if (navigator.share) { try { await navigator.share(dati); } catch (e) { /* annullato */ } }
-    else { copia(location.href); toast("Link copiato"); }
-  });
+  /* ---------- 6. Copia IBAN ---------- */
   const btnIban = $("#copiaIban");
   if (btnIban) btnIban.addEventListener("click", () => { copia(W.regalo.iban); toast("IBAN copiato"); });
 
