@@ -66,7 +66,7 @@ window.WEDDING = {
     nome: "Vincenzo Basile",
     linkedin: "https://www.linkedin.com/in/basile-vincenzo/",
     instagram: "https://www.instagram.com/basile_vinc3nzo/",
-    email: "",
-    whatsapp: ""
+    email: "enzobasile05@gmail.com",
+    whatsapp: "",
   },
 };
