@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Partecipazione di Nozze</title>
+<meta name="description" content="Siamo felici di invitarti al nostro matrimonio.">
+<meta name="theme-color" content="#0f1a17">
+
+<!-- Anteprima su WhatsApp / social -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ti invitiamo al nostro matrimonio">
+<meta property="og:description" content="Tira il fiocco per aprire la partecipazione.">
+<meta property="og:image" content="assets/preview.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Cinzel:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<canvas id="petals" aria-hidden="true"></canvas>
+
+<!-- ============ SCENA 1: BUSTA CON FIOCCO ============ -->
+<section id="scena-busta" class="scena">
+  <p class="occhiello" id="occhiello">Una lettera per te</p>
+
+  <div class="envelope-wrap">
+    <div class="envelope" id="envelope">
+      <div class="env-back"></div>
+
+      <!-- Il biglietto che esce dalla busta -->
+      <div class="env-card" id="envCard">
+        <div class="env-card-inner">
+          <span class="mono">Partecipazione di Nozze</span>
+          <h2 class="script" id="cardNomiSposi">Giulia &amp; Marco</h2>
+          <span class="rule" aria-hidden="true"></span>
+          <p class="mono" id="cardData">12 · 06 · 2027</p>
+        </div>
+      </div>
+
+      <div class="env-front"></div>
+      <div class="env-flap"><span class="seal" aria-hidden="true">G<i>&amp;</i>M</span></div>
+
+      <!-- Nastri + fiocco -->
+      <div class="ribbons" id="ribbons">
+        <span class="ribbon ribbon-v"></span>
+        <span class="ribbon ribbon-h"></span>
+      </div>
+
+      <button class="bow" id="bow" type="button"
+              aria-label="Tira il fiocco per aprire l'invito">
+        <svg viewBox="0 0 140 120" aria-hidden="true">
+          <g class="bow-loops">
+            <path class="loop-l" d="M70 60 C42 26 6 34 10 60 C13 82 48 82 70 60 Z"/>
+            <path class="loop-r" d="M70 60 C98 26 134 34 130 60 C127 82 92 82 70 60 Z"/>
+          </g>
+          <g class="bow-tails">
+            <path class="tail-l" d="M66 64 C52 84 40 96 26 110 L46 116 C56 98 64 82 70 68 Z"/>
+            <path class="tail-r" d="M74 64 C88 84 100 96 114 110 L94 116 C84 98 76 82 70 68 Z"/>
+          </g>
+          <ellipse class="knot" cx="70" cy="62" rx="12" ry="10"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <p class="hint" id="hint"><span>Tira il fiocco</span></p>
+</section>
+
+<!-- ============ SCENA 2: INVITO ============ -->
+<main id="invito" class="invito" hidden>
+
+  <header class="hero">
+    <p class="occhiello" id="salutoTop">Gentili ospiti</p>
+    <p class="mono">insieme alle loro famiglie</p>
+    <h1 class="script"><span id="nomeSposa">Giulia</span><em>&amp;</em><span id="nomeSposo">Marco</span></h1>
+    <span class="rule" aria-hidden="true"></span>
+    <p class="lead">hanno il piacere di invitarvi<br>al loro matrimonio</p>
+    <p class="data-big"><span id="dataTesto">Sabato 12 Giugno 2027</span><br><small id="oraTesto">ore 16:30</small></p>
+    <p class="posti" id="posti" hidden></p>
+    <p class="msg-personale" id="msgPersonale" hidden></p>
+    <div class="scroll-cue" aria-hidden="true"><span></span></div>
+  </header>
+
+  <section class="blocco reveal" id="countdownBox">
+    <h3 class="titolo">Manca poco</h3>
+    <div class="countdown" id="countdown" role="timer" aria-live="off"></div>
+  </section>
+
+  <section class="blocco reveal">
+    <h3 class="titolo">Dove e quando</h3>
+    <div class="luoghi">
+      <article class="luogo" id="luogoCerimonia"></article>
+      <article class="luogo" id="luogoRicevimento"></article>
+    </div>
+  </section>
+
+  <section class="blocco reveal">
+    <h3 class="titolo">Il programma</h3>
+    <ol class="timeline" id="timeline"></ol>
+  </section>
+
+  <section class="blocco reveal" id="dressBox">
+    <h3 class="titolo">Dress code</h3>
+    <p class="testo" id="dressCode"></p>
+  </section>
+
+  <section class="blocco reveal" id="regaloBox">
+    <h3 class="titolo">Un pensiero</h3>
+    <p class="testo" id="regaloTesto"></p>
+    <p class="iban"><code id="regaloIban"></code>
+      <button class="btn-ghost" id="copiaIban" type="button">Copia IBAN</button></p>
+    <p class="testo piccolo" id="regaloIntestatario"></p>
+  </section>
+
+  <section class="blocco reveal rsvp">
+    <h3 class="titolo">Confermi la tua presenza?</h3>
+    <p class="testo">Facci sapere entro il <strong id="rsvpEntro"></strong>.</p>
+    <div class="azioni">
+      <a class="btn" id="btnSi" href="#">Ci sarò</a>
+      <a class="btn btn-secondario" id="btnNo" href="#">Non potrò esserci</a>
+    </div>
+    <div class="azioni">
+      <button class="btn-ghost" id="btnCal" type="button">Aggiungi al calendario</button>
+      <button class="btn-ghost" id="btnShare" type="button">Condividi</button>
+    </div>
+  </section>
+
+  <footer class="chiusura reveal">
+    <span class="rule" aria-hidden="true"></span>
+    <p class="script grande" id="firmaSposi">Giulia &amp; Marco</p>
+    <p class="mono" id="hashtag"></p>
+  </footer>
+</main>
+
+<script src="assets/config.js"></script>
+<script src="assets/invitati.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
