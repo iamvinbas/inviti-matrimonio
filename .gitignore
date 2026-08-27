@@ -1,2 +1,6 @@
 .DS_Store
 node_modules/
+
+# Dati degli invitati: restano SOLO in locale, mai su GitHub
+tools/invitati.csv
+tools/link-generati.csv

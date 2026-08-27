@@ -1,7 +1,26 @@
 # Partecipazione di nozze digitale
 
-Sito statico. Zero costi, zero backend. Si apre tirando il fiocco.
-Ogni invitato riceve un link personalizzato: `.../?i=mario-e-anna`
+Sito statico su GitHub Pages. Zero costi, zero backend.
+Si apre tirando il fiocco. Ogni invitato riceve un link personalizzato.
+
+**Online:** https://iamvinbas.github.io/inviti-matrimonio/
+
+## Privacy: come funziona la personalizzazione
+
+Il repository è pubblico (serve per avere GitHub Pages gratis), quindi
+**l'elenco degli invitati non viene mai committato**. I dati di ciascun
+invitato viaggiano dentro il link, nel parametro `?p=`, come JSON in base64url:
+
+```
+https://iamvinbas.github.io/inviti-matrimonio/?p=eyJzIjoiQ2FyYSBGYW1pZ2xpYSBFc3Bvc2l0byIsIm4iOiJGYW1pZ2xpYSBFc3Bvc2l0byIsIm8iOjR9
+```
+
+Conseguenze:
+
+- Sul sito **non esiste nessun elenco scaricabile**: niente da enumerare.
+- Un codice inventato o storpiato non si decodifica → l'invito si apre in versione generica ("Gentili ospiti"). Nessuno finisce sull'invito di un altro.
+- `tools/invitati.csv` e `tools/link-generati.csv` sono in `.gitignore`: restano solo sul tuo computer. **Fanne un backup**, perché non sono su GitHub.
+- Il link non è cifrato: chi lo riceve può decodificarlo e leggere il proprio nome. È irrilevante — sono i suoi dati. Non metterci nulla che quell'invitato non debba vedere.
 
 ## File
 
@@ -11,17 +30,19 @@ Ogni invitato riceve un link personalizzato: `.../?i=mario-e-anna`
 | `assets/style.css` | grafica e animazioni |
 | `assets/app.js` | logica (apertura busta, countdown, RSVP) |
 | `assets/config.js` | **dati del matrimonio** — date, luoghi, IBAN, numero WhatsApp |
-| `assets/invitati.js` | elenco invitati (generato) |
-| `tools/invitati.csv` | **elenco invitati da compilare** |
-| `tools/genera.mjs` | genera `invitati.js` + i link da inviare |
-| `tools/link-generati.csv` | output: un link e un messaggio WhatsApp per ogni invitato |
+| `tools/invitati.csv` | **elenco invitati** (privato, non su GitHub) |
+| `tools/genera.mjs` | genera i link personalizzati |
+| `tools/link-generati.csv` | output: link + messaggio WhatsApp per ogni invitato (privato) |
 
-## 1. Personalizzare il matrimonio
+## 1. Dati del matrimonio
 
-Modifica solo `assets/config.js` (nomi, data, chiesa, ristorante, programma,
-dress code, IBAN, numero WhatsApp per le conferme).
+Modifica **solo** `assets/config.js`: nomi, data, chiesa, ristorante, programma,
+dress code, IBAN, numero WhatsApp per le conferme.
 
-## 2. Aggiungere gli invitati
+I nomi scritti in `index.html` sono segnaposto: `app.js` li sovrascrive
+leggendo da `config.js`. Cambiarli nell'HTML non serve a niente.
+
+## 2. Invitati
 
 Compila `tools/invitati.csv`:
 
@@ -30,28 +51,30 @@ saluto,nomi,posti,messaggio,telefono
 Cari Mario e Anna,Mario & Anna,2,Non vediamo l'ora di ballare con voi.,393331112223
 ```
 
-- `telefono`: prefisso internazionale senza `+` e senza spazi (es. `39333...`). Se vuoto, il link WhatsApp si apre senza destinatario.
+- `telefono`: prefisso internazionale senza `+` e senza spazi. Se vuoto, il link WhatsApp si apre senza destinatario.
 - `messaggio`: opzionale, frase personale mostrata solo a quell'invitato.
+- se il testo contiene una virgola, mettilo tra virgolette: `"Cari Mario, Anna e famiglia"`.
 
-Poi genera tutto:
-
-```bash
-node tools/genera.mjs "https://TUO-UTENTE.github.io/NOME-REPO/"
-```
-
-Trovi i link pronti in `tools/link-generati.csv`.
-
-## 3. Pubblicare su GitHub Pages
+Poi:
 
 ```bash
-git init && git add -A && git commit -m "Inviti di nozze"
-git branch -M main
-git remote add origin https://github.com/TUO-UTENTE/NOME-REPO.git
-git push -u origin main
+node tools/genera.mjs "https://iamvinbas.github.io/inviti-matrimonio/"
 ```
 
-Poi su GitHub: **Settings → Pages → Source: Deploy from a branch → main / (root)**.
-Dopo 1-2 minuti il sito è online su `https://TUO-UTENTE.github.io/NOME-REPO/`.
+I link pronti finiscono in `tools/link-generati.csv`. La colonna `link_whatsapp`
+si apre già con il messaggio scritto e il destinatario giusto.
+
+## 3. Pubblicare gli aggiornamenti
+
+```bash
+git add -A && git commit -m "aggiorna dati" && git push
+```
+
+GitHub Pages ricostruisce in circa un minuto.
+
+**Se modifichi CSS o JS**, alza di 1 il numero `?v=` nei tag di `index.html`
+(`?v=4` → `?v=5`): GitHub Pages serve gli asset con `cache-control: max-age=600`,
+senza il cambio di versione gli invitati vedrebbero la vecchia copia per 10 minuti.
 
 ## 4. Anteprima in locale
 
@@ -59,11 +82,10 @@ Dopo 1-2 minuti il sito è online su `https://TUO-UTENTE.github.io/NOME-REPO/`.
 python3 -m http.server 4321
 ```
 
-Apri `http://localhost:4321/?i=mario-e-anna`.
+Apri uno dei link di `tools/link-generati.csv` sostituendo il dominio con `http://localhost:4321`.
 
 ## Note
 
-- Il repository **deve essere pubblico** perché GitHub Pages sia gratuito.
-- I link non sono segreti: chi ha il link vede l'invito. Non mettere dati sensibili.
-- L'IBAN è visibile a tutti gli invitati: valuta se lasciarlo (`regalo.iban: ""` lo nasconde).
-- Per l'anteprima nelle chat, metti un'immagine `assets/preview.png` (1200×630).
+- Il repository **deve restare pubblico** perché GitHub Pages sia gratuito sul piano Free.
+- L'IBAN in `config.js` è visibile a chiunque apra un invito. `regalo.iban: ""` nasconde la sezione.
+- Per l'anteprima nelle chat, aggiungi un'immagine `assets/preview.png` (1200×630).

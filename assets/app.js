@@ -6,19 +6,35 @@
   const W = window.WEDDING;
   const $ = (s) => document.querySelector(s);
 
-  /* ---------- 1. Chi sta guardando l'invito ---------- */
-  const params = new URLSearchParams(location.search);
-  const id = (params.get("i") || "").trim().toLowerCase();
-  const nomeLibero = (params.get("n") || "").trim();
+  /* ---------- 1. Chi sta guardando l'invito ----------
+     I dati dell'invitato NON stanno sul sito: viaggiano dentro il link,
+     nel parametro ?p=, come JSON compresso in base64url.
+     Cosi' non esiste nessun elenco scaricabile e nessun codice da indovinare:
+     una stringa inventata non si decodifica e mostra l'invito generico.
+     Chiavi compatte: s=saluto, n=nomi, o=posti, m=messaggio.       */
+  const GENERICO = { saluto: "Gentili ospiti", nomi: "", posti: 0, messaggio: "" };
 
-  let ospite = (window.INVITATI || []).find((o) => o.id.toLowerCase() === id);
-  if (!ospite) {
-    ospite = { ...window.INVITO_DEFAULT };
-    if (nomeLibero) {
-      ospite.saluto = "Cari " + nomeLibero;
-      ospite.nomi = nomeLibero;
+  function leggiOspite() {
+    const p = new URLSearchParams(location.search).get("p");
+    if (!p) return { ...GENERICO };
+    try {
+      const b64 = p.replace(/-/g, "+").replace(/_/g, "/");
+      const bin = atob(b64.padEnd(Math.ceil(b64.length / 4) * 4, "="));
+      const byte = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+      const d = JSON.parse(new TextDecoder().decode(byte));
+      if (!d || typeof d !== "object") return { ...GENERICO };
+      return {
+        saluto: String(d.s || GENERICO.saluto),
+        nomi: String(d.n || ""),
+        posti: Number(d.o) || 0,
+        messaggio: String(d.m || "")
+      };
+    } catch (e) {
+      return { ...GENERICO };   // link storpiato o inventato
     }
   }
+
+  const ospite = leggiOspite();
 
   /* ---------- 2. Riempimento contenuti ---------- */
   const dataEvento = new Date(W.dataISO);
@@ -76,7 +92,7 @@
   }
 
   /* ---------- 3. RSVP via WhatsApp ---------- */
-  const chi = ospite.nomi || nomeLibero || "";
+  const chi = ospite.nomi || "";
   const rsvp = (risposta) => {
     const txt =
       `Ciao! Rispondo alla partecipazione di ${W.sposa} e ${W.sposo}.\n` +
