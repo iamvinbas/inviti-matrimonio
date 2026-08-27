@@ -43,6 +43,16 @@ for _ in $(seq 1 40); do
   if curl -s "$SITO" | grep -q "?v=$NUOVA"; then
     echo ""
     echo "✔ online: $SITO"
+    echo ""
+    echo "  Il tuo browser puo' mostrare ancora la versione vecchia:"
+    echo "  GitHub Pages serve TUTTO con cache-control: max-age=600 (10 minuti),"
+    echo "  index.html compreso. Per vedere subito il risultato usa questo link,"
+    echo "  che ha un parametro sempre diverso e quindi non e' mai in cache:"
+    echo ""
+    echo "  ${SITO}?cb=$(date +%s)"
+    echo ""
+    echo "  Gli invitati non hanno questo problema: il loro link ?p=... e'"
+    echo "  unico, alla prima apertura scaricano sempre la versione aggiornata."
     exit 0
   fi
   echo -n "."

@@ -74,10 +74,22 @@ si apre già con il messaggio scritto e il destinatario giusto.
 Lo script alza il numero `?v=` in `index.html`, fa commit e push, poi aspetta
 che il deploy sia davvero online e lo verifica.
 
-Il passaggio sul `?v=` non è facoltativo: GitHub Pages serve gli asset con
-`cache-control: max-age=600`, quindi senza cambio di versione il browser
-continua a usare la copia vecchia di `config.js` per 10 minuti e **le modifiche
-sembrano non essere arrivate** anche se il push è andato a buon fine.
+### La cache dei 10 minuti
+
+GitHub Pages serve **ogni** file con `cache-control: max-age=600` e non permette
+di cambiare gli header. Conseguenze pratiche:
+
+- Dopo un push, il tuo browser può mostrare ancora la versione vecchia fino a
+  10 minuti: **il push è andato bene lo stesso**. Non rifare le modifiche.
+- Per verificare subito, apri il link con un parametro qualunque in fondo
+  (`?cb=123`): è un URL nuovo, quindi non è in cache. `pubblica.sh` te ne
+  stampa uno pronto. In alternativa Cmd+Shift+R.
+- **Gli invitati non hanno questo problema**: il loro link `?p=...` è unico,
+  alla prima apertura scaricano sempre la versione aggiornata.
+
+Il passaggio sul `?v=` serve comunque: garantisce che, quando l'HTML si
+aggiorna, CSS e JS si aggiornino nello stesso momento invece di restare
+disallineati (HTML nuovo con JS vecchio).
 
 A mano sarebbe:
 
