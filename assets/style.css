@@ -104,18 +104,15 @@ body.no-scroll{overflow:hidden;height:100svh}
 /* sigillo di ceralacca */
 .wax{
   position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);
-  width:min(23vw,96px);height:min(23vw,96px);border:0;padding:0;cursor:pointer;
-  border-radius:46% 54% 52% 48% / 48% 46% 54% 52%;
-  background:radial-gradient(circle at 33% 28%,#2e6249,#173a29 62%,#0c2117);
-  box-shadow:
-    0 6px 14px rgba(0,0,0,.5),
-    inset -3px -4px 7px rgba(0,0,0,.4),
-    inset 2px 3px 6px rgba(255,255,255,.14);
+  width:min(25vw,104px);height:min(25vw,104px);border:0;padding:0;cursor:pointer;
+  background:none;border-radius:50%;
+  filter:drop-shadow(0 7px 10px rgba(0,0,0,.5));
   display:grid;place-items:center;z-index:2;
   opacity:1;transform:translate(-50%,-50%) scale(1);
   transition:opacity .4s ease, transform .5s cubic-bezier(.22,1,.36,1);
 }
-.wax-anello{position:absolute;inset:8%;width:84%;height:84%}
+.wax-forma{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.wax-anello{position:absolute;inset:12%;width:76%;height:76%}
 .wax-anello circle{fill:none;stroke:var(--oro-chiaro);stroke-width:1;opacity:.85}
 .wax-anello .wax-perle rect{fill:var(--oro-chiaro);opacity:.85}
 .wax-iniziali{
@@ -126,19 +123,26 @@ body.no-scroll{overflow:hidden;height:100svh}
 .wax:focus-visible{outline:2px dashed var(--oro-chiaro);outline-offset:5px}
 .scena.si-apre .wax{opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-16deg)}
 
+/* vignetta: senza, il testo bianco si perde sulla carta rosa chiaro */
+.busta-vignetta{
+  position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);
+  width:min(130vw,620px);height:min(48vh,340px);z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at center, rgba(30,16,14,.4) 0%, rgba(30,16,14,.2) 45%, transparent 72%);
+}
+
 /* nome e invito ad aprire, sotto il sigillo */
 .busta-nomi{
   position:absolute;left:50%;top:54%;transform:translate(-50%,0);z-index:2;
   width:88vw;text-align:center;
   font-size:clamp(2.1rem,10vw,3.1rem);color:var(--avorio);margin:0;
-  text-shadow:0 2px 14px rgba(0,0,0,.35);
+  text-shadow:0 1px 3px rgba(20,10,8,.6), 0 10px 26px rgba(15,8,6,.55);
   transition:opacity .5s ease, transform .5s ease;
 }
 .pill-apri{
   position:absolute;left:50%;top:66%;transform:translate(-50%,0);z-index:2;
   font-family:var(--titolo);text-transform:uppercase;letter-spacing:.24em;
   font-size:.68rem;color:var(--avorio);cursor:pointer;
-  background:rgba(20,22,18,.28);border:1px solid rgba(227,200,111,.45);
+  background:rgba(18,20,16,.38);border:1px solid rgba(227,200,111,.45);
   border-radius:999px;padding:.85rem 1.8rem;white-space:nowrap;
   backdrop-filter:blur(2px);
   transition:opacity .5s ease, transform .5s ease, background .25s ease, border-color .25s ease;

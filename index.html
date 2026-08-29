@@ -32,7 +32,7 @@
       rel="stylesheet"
     />
     <!-- Dopo ogni modifica a css/js: alza ?v= di 1 per bypassare la cache (GitHub Pages usa max-age=600) -->
-    <link rel="stylesheet" href="assets/style.css?v=11" />
+    <link rel="stylesheet" href="assets/style.css?v=12" />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
@@ -48,6 +48,28 @@
         </svg>
 
         <button class="wax" id="sigillo" type="button" aria-label="Tocca per aprire l'invito">
+          <!-- Forma della cera: bordo irregolare ottenuto deformando un cerchio
+               con rumore/filtro SVG, non un cerchio perfetto -> effetto colata reale. -->
+          <svg class="wax-forma" viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <filter id="ceralaccaBordo" x="-30%" y="-30%" width="160%" height="160%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="7" result="rumore" />
+                <feDisplacementMap in="SourceGraphic" in2="rumore" scale="8" xChannelSelector="R" yChannelSelector="G" />
+              </filter>
+              <radialGradient id="ceralaccaColore" cx="34%" cy="26%" r="78%">
+                <stop offset="0%" stop-color="#3d7d5b" />
+                <stop offset="45%" stop-color="#1e4933" />
+                <stop offset="100%" stop-color="#0a2016" />
+              </radialGradient>
+              <radialGradient id="ceralaccaLucido" cx="32%" cy="22%" r="34%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity=".5" />
+                <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <ellipse cx="63" cy="70" rx="8" ry="15" fill="url(#ceralaccaColore)" filter="url(#ceralaccaBordo)" opacity=".85" />
+            <circle cx="60" cy="56" r="43" fill="url(#ceralaccaColore)" filter="url(#ceralaccaBordo)" />
+            <circle cx="60" cy="56" r="43" fill="url(#ceralaccaLucido)" filter="url(#ceralaccaBordo)" />
+          </svg>
           <svg class="wax-anello" viewBox="0 0 80 80" aria-hidden="true">
             <circle cx="40" cy="40" r="29" />
             <circle cx="40" cy="40" r="23" />
@@ -64,6 +86,10 @@
           </svg>
           <span class="wax-iniziali script" id="sigilloIniziali">G&amp;T</span>
         </button>
+
+        <!-- Vignetta scura dietro nome e pillola: senza, il bianco si perde
+             sulla carta rosa chiaro. -->
+        <div class="busta-vignetta" aria-hidden="true"></div>
 
         <p class="script busta-nomi" id="bustaNomi">Gaetano &amp; Tiziana</p>
         <button class="pill-apri" id="bustaCta" type="button">Tocca per aprire</button>
@@ -167,7 +193,7 @@
       <aside class="credito reveal" id="credito" hidden></aside>
     </main>
 
-    <script src="assets/config.js?v=11"></script>
-    <script src="assets/app.js?v=11"></script>
+    <script src="assets/config.js?v=12"></script>
+    <script src="assets/app.js?v=12"></script>
   </body>
 </html>
