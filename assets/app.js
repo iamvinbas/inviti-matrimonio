@@ -44,9 +44,7 @@
   // Ordine di visualizzazione: uomo prima, poi donna (richiesta esplicita).
   testo("#nomeSposa", W.sposa);
   testo("#nomeSposo", W.sposo);
-  testo("#cardNomiSposi", `${W.sposo} & ${W.sposa}`);
   testo("#firmaSposi", `${W.sposo} & ${W.sposa}`);
-  testo("#cardData", W.dataBreve || W.dataTesto);
   testo("#dataTesto", W.dataTesto);
   testo("#oraTesto", W.oraTesto);
   testo("#salutoTop", ospite.saluto);
@@ -164,7 +162,6 @@
   }
 
   /* ---------- 7. Apertura busta ---------- */
-  const envelope = $("#envelope");
   const sigillo = $("#sigillo");
   const scena = $("#scena-busta");
   const invito = $("#invito");
@@ -178,9 +175,8 @@
   function apri() {
     if (aperto) return;
     aperto = true;
-    scena.classList.add("si-apre");
-    envelope.classList.add("slegata");
-    setTimeout(() => envelope.classList.add("aperta"), 550);
+    scena.classList.add("si-apre");            // il sigillo si stacca, nome e pillola svaniscono
+    setTimeout(() => scena.classList.add("aperta"), 400);   // la carta si apre come un lembo
     setTimeout(() => {
       scena.classList.add("via");
       invito.hidden = false;
@@ -188,7 +184,7 @@
       requestAnimationFrame(() => invito.classList.add("dentro"));
       petali();
       setTimeout(() => { scena.style.display = "none"; }, 1000);
-    }, 2300);
+    }, 1500);
   }
 
   document.body.classList.add("no-scroll");

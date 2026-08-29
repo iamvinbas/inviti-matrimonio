@@ -32,60 +32,42 @@
       rel="stylesheet"
     />
     <!-- Dopo ogni modifica a css/js: alza ?v= di 1 per bypassare la cache (GitHub Pages usa max-age=600) -->
-    <link rel="stylesheet" href="assets/style.css?v=10" />
+    <link rel="stylesheet" href="assets/style.css?v=11" />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
     <canvas id="petals" aria-hidden="true"></canvas>
 
-    <!-- ============ SCENA 1: BUSTA STILE INVITO ============ -->
+    <!-- ============ SCENA 1: BUSTA A SCHERMO INTERO ============ -->
     <section id="scena-busta" class="scena">
-      <div class="envelope-wrap">
-        <div class="envelope" id="envelope">
-          <div class="env-back"></div>
+      <div class="busta-full" id="bustaFull">
+        <!-- Pieghe della busta: linee che convergono verso il sigillo,
+             come sul retro di una busta reale vista da vicino. -->
+        <svg class="busta-pieghe" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 0 L50 40 M100 0 L50 40 M0 100 L50 40 M100 100 L50 40" />
+        </svg>
 
-          <!-- Il biglietto che esce dalla busta -->
-          <div class="env-card" id="envCard">
-            <div class="env-card-inner">
-              <span class="mono">Partecipazione di Nozze</span>
-              <h2 class="script" id="cardNomiSposi">Gaetano &amp; Tiziana</h2>
-              <span class="rule" aria-hidden="true"></span>
-              <p class="mono" id="cardData">12 · 06 · 2027</p>
-            </div>
-          </div>
-
-          <div class="env-front"></div>
-
-          <!-- Pieghe della busta viste da fuori: linee decorative che
-               convergono verso il sigillo, come in una busta reale. -->
-          <svg class="env-pieghe" viewBox="0 0 400 282" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M0 0 L200 141 M400 0 L200 141 M0 282 L200 141 M400 282 L200 141" />
+        <button class="wax" id="sigillo" type="button" aria-label="Tocca per aprire l'invito">
+          <svg class="wax-anello" viewBox="0 0 80 80" aria-hidden="true">
+            <circle cx="40" cy="40" r="29" />
+            <circle cx="40" cy="40" r="23" />
+            <g class="wax-perle">
+              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(69,40) rotate(45)" />
+              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(60.5,60.5) rotate(45)" />
+              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(40,69) rotate(45)" />
+              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(19.5,60.5) rotate(45)" />
+              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(11,40) rotate(45)" />
+              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(19.5,19.5) rotate(45)" />
+              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(40,11) rotate(45)" />
+              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(60.5,19.5) rotate(45)" />
+            </g>
           </svg>
+          <span class="wax-iniziali script" id="sigilloIniziali">G&amp;T</span>
+        </button>
 
-          <div class="env-flap">
-            <button class="wax" id="sigillo" type="button" aria-label="Tocca per aprire l'invito">
-              <svg class="wax-anello" viewBox="0 0 80 80" aria-hidden="true">
-                <circle cx="40" cy="40" r="29" />
-                <circle cx="40" cy="40" r="23" />
-                <g class="wax-perle">
-                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(69,40) rotate(45)" />
-                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(60.5,60.5) rotate(45)" />
-                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(40,69) rotate(45)" />
-                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(19.5,60.5) rotate(45)" />
-                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(11,40) rotate(45)" />
-                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(19.5,19.5) rotate(45)" />
-                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(40,11) rotate(45)" />
-                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(60.5,19.5) rotate(45)" />
-                </g>
-              </svg>
-              <span class="wax-iniziali script" id="sigilloIniziali">G&amp;T</span>
-            </button>
-          </div>
-        </div>
+        <p class="script busta-nomi" id="bustaNomi">Gaetano &amp; Tiziana</p>
+        <button class="pill-apri" id="bustaCta" type="button">Tocca per aprire</button>
       </div>
-
-      <p class="script busta-nomi" id="bustaNomi">Gaetano &amp; Tiziana</p>
-      <button class="pill-apri" id="bustaCta" type="button">Tocca per aprire</button>
     </section>
 
     <!-- ============ SCENA 2: INVITO ============ -->
@@ -185,7 +167,7 @@
       <aside class="credito reveal" id="credito" hidden></aside>
     </main>
 
-    <script src="assets/config.js?v=10"></script>
-    <script src="assets/app.js?v=10"></script>
+    <script src="assets/config.js?v=11"></script>
+    <script src="assets/app.js?v=11"></script>
   </body>
 </html>
