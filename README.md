@@ -1,11 +1,31 @@
 # Partecipazione di nozze digitale
 
 Sito statico su GitHub Pages. Zero costi, zero backend.
-Si apre tirando il fiocco. Ogni invitato riceve un link personalizzato.
+Si apre tirando il fiocco.
 
 **Online:** https://iamvinbas.github.io/inviti-matrimonio/
 
-## Privacy: come funziona la personalizzazione
+## Decisione attuale: link unico per tutti
+
+Su richiesta, l'invito viene mandato a tutti con **lo stesso link**, quello
+sopra, senza parametri. Chi lo apre vede il saluto generico ("Gentili
+ospiti"), senza nome né conteggio posti.
+
+Il sistema di personalizzazione per singolo invitato (link `?p=...`,
+`tools/invitati.csv`, `tools/genera.mjs`) **resta nel codice ma non viene
+usato**: nessuna delle due cose va toccata per mandare il link unico.
+Se un domani si volesse personalizzare per famiglia, il meccanismo è già
+pronto — vedi "## 2. Invitati (sistema di personalizzazione, non in uso)".
+
+## Sezioni sospese
+
+Due sezioni sono state tolte dalla pagina su richiesta, ma non cancellate:
+sono commentate in `index.html` (righe intorno a "programma" e "dress code")
+e in `assets/app.js`. I dati restano in `assets/config.js`
+(`W.programma`, `W.dressCode`): per farle ricomparire basta togliere i
+commenti in quei due file, non serve riscrivere nulla.
+
+## Privacy: come funziona la personalizzazione (se e quando la si userà)
 
 Il repository è pubblico (serve per avere GitHub Pages gratis), quindi
 **l'elenco degli invitati non viene mai committato**. I dati di ciascun
@@ -43,7 +63,9 @@ dress code, IBAN, numero WhatsApp per le conferme.
 I nomi scritti in `index.html` sono segnaposto: `app.js` li sovrascrive
 leggendo da `config.js`. Cambiarli nell'HTML non serve a niente.
 
-## 2. Invitati
+## 2. Invitati (sistema di personalizzazione, non in uso)
+
+Non necessario con il link unico. Resta qui per quando/se servirà.
 
 Compila `tools/invitati.csv`:
 

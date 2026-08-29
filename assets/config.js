@@ -54,10 +54,10 @@ window.WEDDING = {
     testo:
       "Il vostro affetto è il regalo più grande. Se desiderate contribuire al nostro viaggio di nozze:",
     iban: "IT00 X000 0000 0000 0000 0000 000",
-    intestatario: "Tiziana e Gaetano",
+    intestatario: "Gaetano e Tiziana",
   },
 
-  hashtag: "#Tiziana&Gaetano2027",
+  hashtag: "#Gaetano&Tiziana2027",
 
   /* Firma di chi ha realizzato l'invito. Per toglierla: autore: null
      whatsapp/email vuoti = non mostrati. WhatsApp = prefisso senza + ne spazi. */

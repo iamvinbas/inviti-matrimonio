@@ -41,15 +41,17 @@
 
   function testo(sel, val) { const el = $(sel); if (el) el.textContent = val; }
 
+  // Ordine di visualizzazione: uomo prima, poi donna (richiesta esplicita).
   testo("#nomeSposa", W.sposa);
   testo("#nomeSposo", W.sposo);
-  testo("#cardNomiSposi", `${W.sposa} & ${W.sposo}`);
-  testo("#firmaSposi", `${W.sposa} & ${W.sposo}`);
+  testo("#cardNomiSposi", `${W.sposo} & ${W.sposa}`);
+  testo("#firmaSposi", `${W.sposo} & ${W.sposa}`);
   testo("#cardData", W.dataBreve || W.dataTesto);
   testo("#dataTesto", W.dataTesto);
   testo("#oraTesto", W.oraTesto);
   testo("#salutoTop", ospite.saluto);
-  testo("#dressCode", W.dressCode);
+  // Dress code: sezione sospesa (vedi index.html). W.dressCode resta in config.js.
+  // testo("#dressCode", W.dressCode);
   testo("#rsvpEntro", W.rsvpEntro);
   testo("#hashtag", W.hashtag || "");
   document.title = ospite.nomi ? `${ospite.nomi} — Partecipazione di Nozze` : "Partecipazione di Nozze";
@@ -76,11 +78,11 @@
   $("#luogoCerimonia").innerHTML = luogoHTML(W.cerimonia);
   $("#luogoRicevimento").innerHTML = luogoHTML(W.ricevimento);
 
-  // Programma
-  $("#timeline").innerHTML = W.programma.map((t) => `
-    <li><span class="tl-ora">${t.ora}</span>
-      <span><span class="tl-tit">${t.titolo}</span>
-      ${t.nota ? `<span class="tl-nota">${t.nota}</span>` : ""}</span></li>`).join("");
+  // Programma: sezione sospesa (vedi index.html). W.programma resta in config.js.
+  // $("#timeline").innerHTML = W.programma.map((t) => `
+  //   <li><span class="tl-ora">${t.ora}</span>
+  //     <span><span class="tl-tit">${t.titolo}</span>
+  //     ${t.nota ? `<span class="tl-nota">${t.nota}</span>` : ""}</span></li>`).join("");
 
   // Regalo
   if (W.regalo && W.regalo.iban) {
@@ -95,7 +97,7 @@
   const chi = ospite.nomi || "";
   const rsvp = (risposta) => {
     const txt =
-      `Ciao! Rispondo alla partecipazione di ${W.sposa} e ${W.sposo}.\n` +
+      `Ciao! Rispondo alla partecipazione di ${W.sposo} e ${W.sposa}.\n` +
       (chi ? `Sono: ${chi}\n` : "") +
       `Risposta: ${risposta}` +
       (ospite.posti > 1 ? `\nPersone: ___ / ${ospite.posti}` : "");
@@ -133,7 +135,7 @@
       "DTSTAMP:" + fmt(new Date()),
       "DTSTART:" + fmt(dataEvento),
       "DTEND:" + fmt(fine),
-      `SUMMARY:Matrimonio di ${W.sposa} e ${W.sposo}`,
+      `SUMMARY:Matrimonio di ${W.sposo} e ${W.sposa}`,
       `LOCATION:${W.cerimonia.luogo}\\, ${W.cerimonia.indirizzo}`,
       `DESCRIPTION:${W.cerimonia.ora} cerimonia — ${W.ricevimento.ora} ricevimento a ${W.ricevimento.luogo}`,
       "END:VEVENT", "END:VCALENDAR"
