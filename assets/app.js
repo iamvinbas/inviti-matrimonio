@@ -165,18 +165,22 @@
 
   /* ---------- 7. Apertura busta ---------- */
   const envelope = $("#envelope");
-  const bow = $("#bow");
+  const sigillo = $("#sigillo");
   const scena = $("#scena-busta");
   const invito = $("#invito");
   let aperto = false;
 
+  // Iniziali sul sigillo di ceralacca e nome sotto la busta: dal nome, non a mano.
+  const iniziale = (n) => (n || "").trim().charAt(0).toUpperCase();
+  testo("#sigilloIniziali", `${iniziale(W.sposo)}&${iniziale(W.sposa)}`);
+  testo("#bustaNomi", `${W.sposo} & ${W.sposa}`);
+
   function apri() {
     if (aperto) return;
     aperto = true;
-    $("#hint").classList.add("via");
-    $("#occhiello").classList.add("via");
+    scena.classList.add("si-apre");
     envelope.classList.add("slegata");
-    setTimeout(() => envelope.classList.add("aperta"), 820);
+    setTimeout(() => envelope.classList.add("aperta"), 550);
     setTimeout(() => {
       scena.classList.add("via");
       invito.hidden = false;
@@ -184,29 +188,12 @@
       requestAnimationFrame(() => invito.classList.add("dentro"));
       petali();
       setTimeout(() => { scena.style.display = "none"; }, 1000);
-    }, 2500);
+    }, 2300);
   }
 
   document.body.classList.add("no-scroll");
-  bow.addEventListener("click", apri);
-  envelope.addEventListener("click", (e) => { if (!aperto && e.target.closest(".env-flap,.env-front")) apri(); });
-
-  // trascinamento del fiocco verso il basso
-  let y0 = null;
-  bow.addEventListener("pointerdown", (e) => { y0 = e.clientY; bow.setPointerCapture(e.pointerId); });
-  bow.addEventListener("pointermove", (e) => {
-    if (y0 === null || aperto) return;
-    const dy = Math.max(0, e.clientY - y0);
-    if (dy > 55) { y0 = null; apri(); return; }
-    bow.style.transform = `translate(-50%, calc(-50% + ${dy * 0.6}px))`;
-    envelope.classList.toggle("pop", dy > 12);
-  });
-  const rilascia = () => {
-    if (y0 !== null && !aperto) { bow.style.transform = ""; envelope.classList.remove("pop"); }
-    y0 = null;
-  };
-  bow.addEventListener("pointerup", rilascia);
-  bow.addEventListener("pointercancel", rilascia);
+  sigillo.addEventListener("click", apri);
+  $("#bustaCta").addEventListener("click", apri);
 
   /* ---------- 8. Comparsa sezioni allo scroll ---------- */
   const io = new IntersectionObserver((voci) => {

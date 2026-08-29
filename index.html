@@ -32,16 +32,14 @@
       rel="stylesheet"
     />
     <!-- Dopo ogni modifica a css/js: alza ?v= di 1 per bypassare la cache (GitHub Pages usa max-age=600) -->
-    <link rel="stylesheet" href="assets/style.css?v=9" />
+    <link rel="stylesheet" href="assets/style.css?v=10" />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
     <canvas id="petals" aria-hidden="true"></canvas>
 
-    <!-- ============ SCENA 1: BUSTA CON FIOCCO ============ -->
+    <!-- ============ SCENA 1: BUSTA STILE INVITO ============ -->
     <section id="scena-busta" class="scena">
-      <p class="occhiello" id="occhiello">Una lettera per te</p>
-
       <div class="envelope-wrap">
         <div class="envelope" id="envelope">
           <div class="env-back"></div>
@@ -57,50 +55,37 @@
           </div>
 
           <div class="env-front"></div>
+
+          <!-- Pieghe della busta viste da fuori: linee decorative che
+               convergono verso il sigillo, come in una busta reale. -->
+          <svg class="env-pieghe" viewBox="0 0 400 282" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 0 L200 141 M400 0 L200 141 M0 282 L200 141 M400 282 L200 141" />
+          </svg>
+
           <div class="env-flap">
-            <span class="seal" aria-hidden="true">G<i>&amp;</i>T</span>
+            <button class="wax" id="sigillo" type="button" aria-label="Tocca per aprire l'invito">
+              <svg class="wax-anello" viewBox="0 0 80 80" aria-hidden="true">
+                <circle cx="40" cy="40" r="29" />
+                <circle cx="40" cy="40" r="23" />
+                <g class="wax-perle">
+                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(69,40) rotate(45)" />
+                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(60.5,60.5) rotate(45)" />
+                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(40,69) rotate(45)" />
+                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(19.5,60.5) rotate(45)" />
+                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(11,40) rotate(45)" />
+                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(19.5,19.5) rotate(45)" />
+                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(40,11) rotate(45)" />
+                  <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(60.5,19.5) rotate(45)" />
+                </g>
+              </svg>
+              <span class="wax-iniziali script" id="sigilloIniziali">G&amp;T</span>
+            </button>
           </div>
-
-          <!-- Nastri + fiocco -->
-          <div class="ribbons" id="ribbons">
-            <span class="ribbon ribbon-v"></span>
-            <span class="ribbon ribbon-h"></span>
-          </div>
-
-          <button
-            class="bow"
-            id="bow"
-            type="button"
-            aria-label="Tira il fiocco per aprire l'invito"
-          >
-            <svg viewBox="0 0 140 120" aria-hidden="true">
-              <g class="bow-loops">
-                <path
-                  class="loop-l"
-                  d="M70 60 C42 26 6 34 10 60 C13 82 48 82 70 60 Z"
-                />
-                <path
-                  class="loop-r"
-                  d="M70 60 C98 26 134 34 130 60 C127 82 92 82 70 60 Z"
-                />
-              </g>
-              <g class="bow-tails">
-                <path
-                  class="tail-l"
-                  d="M66 64 C52 84 40 96 26 110 L46 116 C56 98 64 82 70 68 Z"
-                />
-                <path
-                  class="tail-r"
-                  d="M74 64 C88 84 100 96 114 110 L94 116 C84 98 76 82 70 68 Z"
-                />
-              </g>
-              <ellipse class="knot" cx="70" cy="62" rx="12" ry="10" />
-            </svg>
-          </button>
         </div>
       </div>
 
-      <p class="hint" id="hint"><span>Tira il fiocco</span></p>
+      <p class="script busta-nomi" id="bustaNomi">Gaetano &amp; Tiziana</p>
+      <button class="pill-apri" id="bustaCta" type="button">Tocca per aprire</button>
     </section>
 
     <!-- ============ SCENA 2: INVITO ============ -->
@@ -200,7 +185,7 @@
       <aside class="credito reveal" id="credito" hidden></aside>
     </main>
 
-    <script src="assets/config.js?v=9"></script>
-    <script src="assets/app.js?v=9"></script>
+    <script src="assets/config.js?v=10"></script>
+    <script src="assets/app.js?v=10"></script>
   </body>
 </html>

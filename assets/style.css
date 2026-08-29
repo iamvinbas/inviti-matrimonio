@@ -65,19 +65,16 @@ body.no-scroll{overflow:hidden;height:100svh}
 }
 
 /* =========================================================
-   SCENA 1 — busta
+   SCENA 1 — busta stile invito (carta rosa, sigillo di ceralacca)
    ========================================================= */
 .scena{
   position:relative;z-index:10;
   min-height:100svh;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:2.2rem;padding:2rem 1rem;
+  gap:1.6rem;padding:2rem 1rem;
   transition:opacity .9s ease, transform .9s ease;
 }
 .scena.via{opacity:0;transform:scale(1.06);pointer-events:none}
-
-#occhiello{transition:opacity .5s ease}
-#occhiello.via{opacity:0}
 
 .envelope-wrap{perspective:1400px}
 
@@ -87,45 +84,69 @@ body.no-scroll{overflow:hidden;height:100svh}
   aspect-ratio:1.42/1;
   transform-style:preserve-3d;
   transition:transform .9s cubic-bezier(.22,1,.36,1);
-  filter:drop-shadow(0 30px 45px rgba(0,0,0,.55));
+  filter:drop-shadow(0 26px 40px rgba(0,0,0,.5));
+  /* carta da lettere: rosa cipria con un motivo di rose incise */
+  --carta-1:#f3ddd8;
+  --carta-2:#e9cac4;
 }
 .envelope.pop{transform:translateY(-6px) rotateX(4deg)}
 
 .env-back,.env-front,.env-flap{position:absolute;left:0;width:100%}
 .env-back{
   top:0;height:100%;z-index:1;border-radius:6px;
-  background:linear-gradient(160deg,#20362d,#132019);
+  background:linear-gradient(160deg,var(--carta-1),var(--carta-2));
 }
 .env-front{
   top:0;height:100%;z-index:4;border-radius:6px;
-  background:linear-gradient(200deg,#25402f,#16261e);
-  clip-path:polygon(0 0, 50% 44%, 100% 0, 100% 100%, 0 100%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84'%3E%3Cg stroke='%23ffffff8f' fill='none' transform='translate(-.6,-.6)'%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(72 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(144 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(216 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(288 42 42)'/%3E%3Ccircle cx='42' cy='42' r='3'/%3E%3Cpath d='M12 74q30-12 60 0'/%3E%3C/g%3E%3Cg stroke='%23a9756c3d' fill='none' transform='translate(.6,.6)'%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(72 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(144 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(216 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(288 42 42)'/%3E%3Ccircle cx='42' cy='42' r='3'/%3E%3Cpath d='M12 74q30-12 60 0'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(160deg,var(--carta-1),var(--carta-2));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.06);
 }
+/* pieghe della busta: linee che convergono al centro, come sul retro di una busta reale */
+.env-pieghe{
+  position:absolute;inset:0;width:100%;height:100%;z-index:5;
+  pointer-events:none;border-radius:6px;
+}
+.env-pieghe path{
+  fill:none;stroke:rgba(120,70,60,.16);stroke-width:1.4;
+  vector-effect:non-scaling-stroke;
+}
+
 .env-flap{
-  top:0;height:62%;z-index:5;
+  top:0;height:62%;z-index:6;
   transform-origin:top center;
-  background:linear-gradient(180deg,#2a4835,#1b2f24);
-  clip-path:polygon(0 0, 100% 0, 50% 100%);
   display:flex;align-items:flex-end;justify-content:center;
   transition:transform .95s cubic-bezier(.65,-.2,.3,1.2), z-index 0s .45s;
+  pointer-events:none;
 }
+.env-flap > *{pointer-events:auto}
 .aperta .env-flap{transform:rotateX(-176deg);z-index:0}
 
 /* sigillo di ceralacca */
-.seal{
+.wax{
   position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
-  width:62px;height:62px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#b8373f,#7d1b22 65%,#5c1116);
-  box-shadow:0 4px 10px rgba(0,0,0,.5), inset 0 -3px 6px rgba(0,0,0,.35);
-  display:grid;place-content:center;
-  font-family:var(--titolo);font-size:.85rem;letter-spacing:.02em;color:#f2dcc4;
-  opacity:0;transform:translate(-50%,-50%) scale(.7);
-  transition:opacity .45s ease .35s, transform .55s cubic-bezier(.22,1,.36,1) .35s;
+  width:78px;height:78px;border:0;padding:0;cursor:pointer;
+  border-radius:46% 54% 52% 48% / 48% 46% 54% 52%;
+  background:radial-gradient(circle at 33% 28%,#2e6249,#173a29 62%,#0c2117);
+  box-shadow:
+    0 5px 11px rgba(0,0,0,.5),
+    inset -3px -4px 7px rgba(0,0,0,.4),
+    inset 2px 3px 6px rgba(255,255,255,.14);
+  display:grid;place-items:center;
+  opacity:1;transform:translate(-50%,-50%) scale(1);
+  transition:opacity .4s ease, transform .5s cubic-bezier(.22,1,.36,1);
 }
-.seal i{font-style:normal;opacity:.7;font-size:.7em}
-.slegata .seal{opacity:1;transform:translate(-50%,-50%) scale(1)}
-.aperta .seal{opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-20deg);transition-delay:0s}
+.wax-anello{position:absolute;inset:8%;width:84%;height:84%}
+.wax-anello circle{fill:none;stroke:var(--oro-chiaro);stroke-width:1;opacity:.85}
+.wax-anello .wax-perle rect{fill:var(--oro-chiaro);opacity:.85}
+.wax-iniziali{
+  position:relative;color:var(--oro-chiaro);font-size:1.5rem;line-height:1;
+  transform:translateY(-1px);
+}
+.wax:hover{transform:translate(-50%,-50%) scale(1.05)}
+.slegata .wax{opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-16deg)}
+.wax:focus-visible{outline:2px dashed var(--oro-chiaro);outline-offset:5px}
 
 /* biglietto dentro la busta */
 .env-card{
@@ -137,7 +158,7 @@ body.no-scroll{overflow:hidden;height:100svh}
   transition:transform 1.05s cubic-bezier(.22,1,.36,1) .35s, box-shadow .6s ease;
 }
 .aperta .env-card{
-  transform:translateY(-62%) scale(1.02);z-index:6;
+  transform:translateY(-62%) scale(1.02);z-index:3;
   box-shadow:0 26px 50px rgba(0,0,0,.55);
 }
 .env-card .mono{color:#8a7f68;opacity:1}
@@ -145,60 +166,23 @@ body.no-scroll{overflow:hidden;height:100svh}
 .env-card .rule{margin:.9rem auto;width:90px}
 .env-card p{color:#6f6553;margin:0}
 
-/* nastri */
-.ribbons{position:absolute;inset:0;z-index:7;pointer-events:none;overflow:hidden;border-radius:6px}
-.ribbon{
-  position:absolute;
-  background:linear-gradient(90deg,#9d7c1c,var(--oro-chiaro) 45%,#a9861f);
-  box-shadow:0 2px 6px rgba(0,0,0,.35);
-  transition:transform 1s cubic-bezier(.4,0,.2,1), opacity .8s ease .25s;
+/* nome e invito ad aprire, sotto la busta */
+.busta-nomi{
+  font-size:clamp(2rem,9vw,2.7rem);color:var(--avorio);margin:0;
+  transition:opacity .5s ease, transform .5s ease;
 }
-.ribbon-v{left:calc(50% - 13px);top:-8%;width:26px;height:116%}
-.ribbon-h{top:calc(50% - 13px);left:-8%;height:26px;width:116%}
-.slegata .ribbon-v{transform:translateY(-135%) rotate(-6deg);opacity:0}
-.slegata .ribbon-h{transform:translateX(135%) rotate(4deg);opacity:0}
+.pill-apri{
+  font-family:var(--titolo);text-transform:uppercase;letter-spacing:.24em;
+  font-size:.68rem;color:var(--avorio);cursor:pointer;
+  background:rgba(255,255,255,.06);border:1px solid rgba(227,200,111,.35);
+  border-radius:999px;padding:.85rem 1.8rem;
+  transition:opacity .5s ease, transform .5s ease, background .25s ease, border-color .25s ease;
+}
+.pill-apri:hover{background:rgba(227,200,111,.12);border-color:var(--oro-chiaro)}
+.pill-apri:focus-visible{outline:2px dashed var(--oro-chiaro);outline-offset:4px}
 
-/* fiocco */
-.bow{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:130px;height:112px;z-index:8;
-  background:none;border:0;padding:0;cursor:grab;
-  filter:drop-shadow(0 6px 10px rgba(0,0,0,.45));
-  transition:transform .35s ease, opacity .6s ease;
-  touch-action:none;
-}
-.bow:active{cursor:grabbing}
-.bow svg{width:100%;height:100%;overflow:visible}
-.bow path,.bow ellipse{
-  fill:url(#g) ;
-  fill:#dcbc5e;
-  transition:transform .9s cubic-bezier(.3,0,.2,1), opacity .7s ease;
-  transform-origin:70px 60px;
-}
-.bow .loop-l{fill:#e0c46c}
-.bow .loop-r{fill:#cfae4f}
-.bow .tail-l,.bow .tail-r{fill:#d5b658}
-.bow .knot{fill:#b9973c}
-.bow::after{
-  content:"";position:absolute;inset:-18px;border-radius:50%;
-}
-.bow:focus-visible{outline:2px dashed var(--oro-chiaro);outline-offset:8px;border-radius:12px}
-
-.slegata .bow{opacity:0;transform:translate(-50%,120%) rotate(18deg) scale(.85)}
-.slegata .bow .loop-l{transform:translate(-46px,10px) rotate(-40deg);opacity:0}
-.slegata .bow .loop-r{transform:translate(46px,10px) rotate(40deg);opacity:0}
-.slegata .bow .tail-l{transform:translate(-10px,40px) rotate(-12deg)}
-.slegata .bow .tail-r{transform:translate(10px,40px) rotate(12deg)}
-
-/* suggerimento */
-.hint{
-  font-family:var(--titolo);text-transform:uppercase;letter-spacing:.32em;
-  font-size:.66rem;color:var(--oro-chiaro);margin:0;opacity:.9;
-  transition:opacity .4s ease;
-}
-.hint span{display:inline-block;animation:pulse 2.4s ease-in-out infinite}
-.hint.via{opacity:0}
-@keyframes pulse{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(5px);opacity:1}}
+.scena.si-apre .busta-nomi,
+.scena.si-apre .pill-apri{opacity:0;transform:translateY(10px);pointer-events:none}
 
 /* =========================================================
    SCENA 2 — invito
