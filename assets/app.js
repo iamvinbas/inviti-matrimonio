@@ -173,18 +173,20 @@
   function apri() {
     if (aperto) return;
     aperto = true;
-    // Prima la busta diventa il fondale a tutta pagina, poi si apre come un teatro.
+    // Il lembo superiore si apre; il corpo della busta resta fermo.
     scena.classList.add("busta-aperta");
     setTimeout(() => {
-      scena.classList.add("teatro");
       invito.hidden = false;
       document.body.classList.remove("no-scroll");
       requestAnimationFrame(() => invito.classList.add("dentro"));
-    }, 1050);
+    }, 720);
+    setTimeout(() => {
+      scena.classList.add("via");
+    }, 1200);
     setTimeout(() => {
       scena.style.display = "none";
       petali();
-    }, 2600);
+    }, 2200);
   }
 
   document.body.classList.add("no-scroll");
