@@ -65,49 +65,102 @@ body.no-scroll{overflow:hidden;height:100svh}
 }
 
 /* =========================================================
-   SCENA 1 — busta a schermo intero (carta rosa, sigillo di ceralacca)
+   SCENA 1 — busta fisica (carta, pieghe e sigillo)
    ========================================================= */
 .scena{
   position:relative;z-index:10;
-  min-height:100svh;
-  overflow:hidden;
+  min-height:100svh;display:block;overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% 42%,rgba(39,73,58,.72) 0%,rgba(15,26,23,0) 47%),
+    radial-gradient(ellipse at 50% 100%,#08110e 0%,var(--verde) 70%);
   perspective:1400px;
   transition:opacity .9s ease, transform .9s ease;
 }
 .scena.via{opacity:0;transform:scale(1.03);pointer-events:none}
 
-/* La busta riempie tutto lo schermo: non è un oggetto centrato,
-   è la superficie della carta vista da vicino. */
+/* La busta è un oggetto centrato: ombra, bordo e luce la fanno sembrare
+   appoggiata davanti all'utente invece che stampata sullo sfondo. */
 .busta-full{
-  position:absolute;inset:0;
-  transform-origin:top center;
-  --carta-1:#f3ddd8;
-  --carta-2:#e9cac4;
+  position:absolute;left:50%;top:50%;
+  width:min(88vw,760px);height:min(88svh,660px);min-height:500px;
+  overflow:hidden;
+  transform-origin:center center;transform-style:preserve-3d;
+  transform:translate(-50%,-50%) rotateX(0deg);
+  --carta-1:#f0e5d5;
+  --carta-2:#d9c4ad;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84'%3E%3Cg fill='none' stroke-width='1'%3E%3Cg stroke='%23ffffff8f' fill='none' transform='translate(-.6,-.6)'%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(72 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(144 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(216 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(288 42 42)'/%3E%3Ccircle cx='42' cy='42' r='3'/%3E%3Cpath d='M12 74q30-12 60 0'/%3E%3C/g%3E%3Cg stroke='%23a9756c3d' fill='none' transform='translate(.6,.6)'%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(72 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(144 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(216 42 42)'/%3E%3Cpath d='M42 27c4-6 11-6 11 1c0 6-6 10-11 14c-5-4-11-8-11-14c0-7 7-7 11-1Z' transform='rotate(288 42 42)'/%3E%3Ccircle cx='42' cy='42' r='3'/%3E%3Cpath d='M12 74q30-12 60 0'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
-    linear-gradient(165deg,var(--carta-1),var(--carta-2));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.35);
-  transition:transform 1.05s cubic-bezier(.65,-.2,.32,1), opacity .85s ease .15s;
+    linear-gradient(116deg,rgba(255,255,255,.65),transparent 26%,rgba(111,76,49,.12) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E"),
+    linear-gradient(160deg,var(--carta-1),var(--carta-2));
+  border:1px solid rgba(255,255,255,.55);border-radius:4px 4px 7px 7px;
+  box-shadow:0 34px 70px rgba(0,0,0,.45),0 8px 16px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.75);
+  transition:transform 1.1s cubic-bezier(.22,1,.36,1);
 }
-.scena.aperta .busta-full{transform:rotateX(-98deg) translateY(-1%);opacity:0}
+.busta-full::after{
+  content:"";position:absolute;inset:12px;z-index:0;pointer-events:none;
+  border:1px solid rgba(111,76,49,.18);border-radius:2px;
+  box-shadow:inset 0 0 28px rgba(116,80,50,.09);
+}
+.scena.aperta .busta-full{transform:translate(-50%,-50%) scale(1.025)}
 
-/* pieghe della busta: convergono verso il sigillo, a ~40% dall'alto */
+/* Pieghe: il triangolo superiore è il lembo, quello inferiore la tasca. */
 .busta-pieghe{
   position:absolute;inset:0;width:100%;height:100%;
-  pointer-events:none;
+  pointer-events:none;z-index:1;transform-style:preserve-3d;
 }
 .busta-pieghe path{
-  fill:none;stroke:rgba(120,70,60,.16);stroke-width:1.4;
+  fill:none;stroke:rgba(111,76,49,.2);stroke-width:1.1;
   vector-effect:non-scaling-stroke;
 }
+.busta-pieghe .flap{fill:rgba(255,249,237,.23);stroke:rgba(111,76,49,.26);stroke-width:1.4}
+.busta-pieghe .tasca{fill:rgba(110,73,44,.08);stroke:rgba(111,76,49,.14);stroke-width:1.1}
+.busta-pieghe .flap{
+  transform-box:fill-box;transform-origin:50% 100%;
+  transition:transform 1s cubic-bezier(.22,1,.36,1),opacity .45s ease .45s;
+  backface-visibility:hidden;
+}
+.scena.si-apre .busta-pieghe .flap{transform:rotateX(165deg);opacity:.08}
+
+/* Il foglio sale dalla tasca, mentre il corpo della busta resta fermo. */
+.busta-letter{
+  position:absolute;left:50%;top:11%;width:78%;height:76%;z-index:2;
+  pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1.5rem;box-sizing:border-box;text-align:center;
+  color:#304c3b;background:linear-gradient(145deg,#fffaf0,#eadfca);
+  border:1px solid rgba(111,76,49,.28);
+  box-shadow:0 12px 24px rgba(55,34,18,.2),inset 0 0 22px rgba(116,80,50,.08);
+  transform:translate(-50%,118%) rotate(-1.2deg);opacity:0;
+  transition:transform 1.25s cubic-bezier(.16,1,.3,1) .12s,opacity .55s ease .12s;
+}
+.busta-letter::before,.busta-letter::after{
+  content:"";position:absolute;left:12%;right:12%;height:1px;
+  background:rgba(155,120,71,.3);
+}
+.busta-letter::before{top:12%}.busta-letter::after{bottom:12%}
+.scena.si-apre .busta-letter{transform:translate(-50%,20%) rotate(-1.2deg);opacity:1}
+.letter-kicker,.letter-data{
+  margin:0;font-family:var(--titolo);font-size:.58rem;letter-spacing:.24em;
+  text-transform:uppercase;color:#806843;
+}
+.letter-nomi{margin:1rem 0 .8rem;font-size:clamp(2rem,8vw,3.4rem);line-height:.95}
+.letter-rule{width:2.2rem;height:1px;background:#9b7847;margin-bottom:.8rem}
+
+.busta-intestazione{
+  position:absolute;left:50%;top:10%;transform:translateX(-50%);z-index:4;
+  display:flex;align-items:center;gap:.8rem;white-space:nowrap;
+  color:#6c5944;font-family:var(--titolo);font-size:.58rem;
+  text-transform:uppercase;letter-spacing:.27em;
+}
+.busta-intestazione i{display:block;width:4px;height:4px;background:#9b7847;transform:rotate(45deg)}
 
 /* sigillo di ceralacca */
 .wax{
-  position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);
-  width:min(25vw,104px);height:min(25vw,104px);border:0;padding:0;cursor:pointer;
+  position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);
+  width:clamp(88px,16vw,126px);height:clamp(88px,16vw,126px);border:0;padding:0;cursor:pointer;
   background:none;border-radius:50%;
-  filter:drop-shadow(0 7px 10px rgba(0,0,0,.5));
-  display:grid;place-items:center;z-index:2;
+  filter:drop-shadow(0 10px 9px rgba(33,20,12,.35));
+  display:grid;place-items:center;z-index:5;
   opacity:1;transform:translate(-50%,-50%) scale(1);
   transition:opacity .4s ease, transform .5s cubic-bezier(.22,1,.36,1);
 }
@@ -116,42 +169,50 @@ body.no-scroll{overflow:hidden;height:100svh}
 .wax-anello circle{fill:none;stroke:var(--oro-chiaro);stroke-width:1;opacity:.85}
 .wax-anello .wax-perle rect{fill:var(--oro-chiaro);opacity:.85}
 .wax-iniziali{
-  position:relative;color:var(--oro-chiaro);font-size:clamp(1.2rem,4.6vw,1.6rem);line-height:1;
+  position:relative;color:var(--oro-chiaro);font-size:clamp(1.3rem,4.6vw,1.75rem);line-height:1;
   transform:translateY(-1px);
 }
 .wax:hover{transform:translate(-50%,-50%) scale(1.05)}
 .wax:focus-visible{outline:2px dashed var(--oro-chiaro);outline-offset:5px}
 .scena.si-apre .wax{opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-16deg)}
 
-/* vignetta: senza, il testo bianco si perde sulla carta rosa chiaro */
+/* luce morbida: simula una fotografia ravvicinata della carta */
 .busta-vignetta{
-  position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);
-  width:min(130vw,620px);height:min(48vh,340px);z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse at center, rgba(30,16,14,.4) 0%, rgba(30,16,14,.2) 45%, transparent 72%);
+  position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);
+  width:90%;height:48%;z-index:3;pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(255,249,238,.58) 0%,rgba(255,249,238,.2) 45%,transparent 73%);
 }
 
 /* nome e invito ad aprire, sotto il sigillo */
 .busta-nomi{
-  position:absolute;left:50%;top:54%;transform:translate(-50%,0);z-index:2;
-  width:88vw;text-align:center;
-  font-size:clamp(2.1rem,10vw,3.1rem);color:var(--avorio);margin:0;
-  text-shadow:0 1px 3px rgba(20,10,8,.6), 0 10px 26px rgba(15,8,6,.55);
+  position:absolute;left:50%;top:60%;transform:translate(-50%,0);z-index:4;
+  width:90%;text-align:center;
+  font-size:clamp(2.4rem,8vw,4rem);color:#23392d;margin:0;
+  text-shadow:0 1px 0 rgba(255,255,255,.5);
   transition:opacity .5s ease, transform .5s ease;
 }
 .pill-apri{
-  position:absolute;left:50%;top:66%;transform:translate(-50%,0);z-index:2;
+  position:absolute;left:50%;top:78%;transform:translate(-50%,0);z-index:4;
   font-family:var(--titolo);text-transform:uppercase;letter-spacing:.24em;
-  font-size:.68rem;color:var(--avorio);cursor:pointer;
-  background:rgba(18,20,16,.38);border:1px solid rgba(227,200,111,.45);
+  font-size:.64rem;color:#344d3e;cursor:pointer;
+  background:rgba(255,250,240,.48);border:1px solid rgba(91,72,47,.38);
   border-radius:999px;padding:.85rem 1.8rem;white-space:nowrap;
-  backdrop-filter:blur(2px);
+  backdrop-filter:blur(4px);box-shadow:0 3px 10px rgba(56,37,21,.1);
   transition:opacity .5s ease, transform .5s ease, background .25s ease, border-color .25s ease;
 }
-.pill-apri:hover{background:rgba(227,200,111,.16);border-color:var(--oro-chiaro)}
+.pill-apri:hover{background:rgba(255,255,255,.75);border-color:#9b7847}
 .pill-apri:focus-visible{outline:2px dashed var(--oro-chiaro);outline-offset:4px}
 
 .scena.si-apre .busta-nomi,
 .scena.si-apre .pill-apri{opacity:0;transform:translate(-50%,10px);pointer-events:none}
+
+@media (max-width:520px){
+  .busta-full{width:calc(100vw - 2rem);height:min(88svh,650px);min-height:500px}
+  .busta-intestazione{top:9%;font-size:.52rem;letter-spacing:.2em;gap:.55rem}
+  .wax{top:44%;width:clamp(86px,24vw,112px);height:clamp(86px,24vw,112px)}
+  .busta-nomi{top:60%;font-size:clamp(2.25rem,12vw,3.25rem)}
+  .pill-apri{top:78%;padding:.78rem 1.3rem;font-size:.58rem}
+}
 
 /* =========================================================
    SCENA 2 — invito

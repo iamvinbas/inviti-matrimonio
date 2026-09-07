@@ -8,8 +8,8 @@ Si apre tirando il fiocco.
 ## Decisione attuale: link unico per tutti
 
 Su richiesta, l'invito viene mandato a tutti con **lo stesso link**, quello
-sopra, senza parametri. Chi lo apre vede il saluto generico ("Gentili
-ospiti"), senza nome né conteggio posti.
+sopra, senza parametri. Chi lo apre vede il saluto generico ("Cari amici e
+parenti"), senza nome né conteggio posti.
 
 Il sistema di personalizzazione per singolo invitato (link `?p=...`,
 `tools/invitati.csv`, `tools/genera.mjs`) **resta nel codice ma non viene
@@ -38,7 +38,7 @@ https://iamvinbas.github.io/inviti-matrimonio/?p=eyJzIjoiQ2FyYSBGYW1pZ2xpYSBFc3B
 Conseguenze:
 
 - Sul sito **non esiste nessun elenco scaricabile**: niente da enumerare.
-- Un codice inventato o storpiato non si decodifica → l'invito si apre in versione generica ("Gentili ospiti"). Nessuno finisce sull'invito di un altro.
+- Un codice inventato o storpiato non si decodifica → l'invito si apre in versione generica ("Cari amici e parenti"). Nessuno finisce sull'invito di un altro.
 - `tools/invitati.csv` e `tools/link-generati.csv` sono in `.gitignore`: restano solo sul tuo computer. **Fanne un backup**, perché non sono su GitHub.
 - Il link non è cifrato: chi lo riceve può decodificarlo e leggere il proprio nome. È irrilevante — sono i suoi dati. Non metterci nulla che quell'invitato non debba vedere.
 

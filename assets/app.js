@@ -12,7 +12,7 @@
      Cosi' non esiste nessun elenco scaricabile e nessun codice da indovinare:
      una stringa inventata non si decodifica e mostra l'invito generico.
      Chiavi compatte: s=saluto, n=nomi, o=posti, m=messaggio.       */
-  const GENERICO = { saluto: "Gentili ospiti", nomi: "", posti: 0, messaggio: "" };
+  const GENERICO = { saluto: "Cari amici e parenti", nomi: "", posti: 0, messaggio: "" };
 
   function leggiOspite() {
     const p = new URLSearchParams(location.search).get("p");
@@ -47,6 +47,9 @@
   testo("#firmaSposi", `${W.sposo} & ${W.sposa}`);
   testo("#dataTesto", W.dataTesto);
   testo("#oraTesto", W.oraTesto);
+  testo("#bustaData", W.dataBreve || "");
+  testo("#letterNomi", `${W.sposo} & ${W.sposa}`);
+  testo("#letterData", W.dataBreve || "");
   testo("#salutoTop", ospite.saluto);
   // Dress code: sezione sospesa (vedi index.html). W.dressCode resta in config.js.
   // testo("#dressCode", W.dressCode);
@@ -175,8 +178,8 @@
   function apri() {
     if (aperto) return;
     aperto = true;
-    scena.classList.add("si-apre");            // il sigillo si stacca, nome e pillola svaniscono
-    setTimeout(() => scena.classList.add("aperta"), 400);   // la carta si apre come un lembo
+    scena.classList.add("si-apre");            // sigillo, lembo e foglio iniziano a muoversi
+    requestAnimationFrame(() => scena.classList.add("aperta"));
     setTimeout(() => {
       scena.classList.add("via");
       invito.hidden = false;
@@ -184,7 +187,7 @@
       requestAnimationFrame(() => invito.classList.add("dentro"));
       petali();
       setTimeout(() => { scena.style.display = "none"; }, 1000);
-    }, 1500);
+    }, 1700);
   }
 
   document.body.classList.add("no-scroll");
