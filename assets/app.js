@@ -180,11 +180,11 @@
       invito.hidden = false;
       document.body.classList.remove("no-scroll");
       requestAnimationFrame(() => invito.classList.add("dentro"));
-    }, 900);
+    }, 1050);
     setTimeout(() => {
       scena.style.display = "none";
       petali();
-    }, 2450);
+    }, 2600);
   }
 
   document.body.classList.add("no-scroll");

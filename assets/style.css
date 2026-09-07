@@ -157,6 +157,9 @@ body.no-scroll{overflow:hidden;height:100svh}
   transition:transform 1s cubic-bezier(.22,1,.36,1),opacity .45s ease .45s;
   backface-visibility:hidden;
 }
+.scena.busta-aperta .busta-pieghe .flap{
+  transform:rotateX(165deg);opacity:.18;
+}
 
 .busta-intestazione{
   position:absolute;left:50%;top:10%;transform:translateX(-50%);z-index:4;
