@@ -48,6 +48,7 @@
   testo("#dataTesto", W.dataTesto);
   testo("#oraTesto", W.oraTesto);
   testo("#bustaData", W.dataBreve || "");
+  testo("#letterData", W.dataBreve || "");
   testo("#salutoTop", ospite.saluto);
   // Dress code: sezione sospesa (vedi index.html). W.dressCode resta in config.js.
   // testo("#dressCode", W.dressCode);
@@ -169,24 +170,28 @@
   let aperto = false;
 
   testo("#bustaNomi", `${W.sposo} & ${W.sposa}`);
+  testo("#letterNomi", `${W.sposo} & ${W.sposa}`);
 
   function apri() {
     if (aperto) return;
     aperto = true;
-    // Il lembo superiore si apre; il corpo della busta resta fermo.
+    // Prima ruotano insieme lembo e cera, poi il biglietto esce dalla tasca.
     scena.classList.add("apri_busta");
+    setTimeout(() => {
+      scena.classList.add("biglietto_esce");
+    }, 850);
     setTimeout(() => {
       invito.hidden = false;
       document.body.classList.remove("no-scroll");
       requestAnimationFrame(() => invito.classList.add("dentro"));
-    }, 720);
+    }, 1450);
     setTimeout(() => {
       scena.classList.add("via");
-    }, 1200);
+    }, 1950);
     setTimeout(() => {
       scena.style.display = "none";
       petali();
-    }, 2200);
+    }, 2850);
   }
 
   document.body.classList.add("no-scroll");
