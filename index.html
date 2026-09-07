@@ -32,7 +32,7 @@
       rel="stylesheet"
     />
     <!-- Dopo ogni modifica a css/js: alza ?v= di 1 per bypassare la cache (GitHub Pages usa max-age=600) -->
-    <link rel="stylesheet" href="assets/style.css?v=15" />
+    <link rel="stylesheet" href="assets/style.css?v=18" />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
@@ -49,14 +49,6 @@
           <path d="M0 0 L50 40 M100 0 L50 40 M0 100 L50 40 M100 100 L50 40" />
         </svg>
 
-        <!-- Piccolo foglio che emerge dalla tasca quando il lembo si apre. -->
-        <div class="busta-letter" aria-hidden="true">
-          <p class="letter-kicker">Il nostro giorno</p>
-          <p class="script letter-nomi" id="letterNomi">Gaetano &amp; Tiziana</p>
-          <span class="letter-rule" aria-hidden="true"></span>
-          <p class="letter-data" id="letterData">12 · 06 · 2027</p>
-        </div>
-
         <div class="busta-intestazione" aria-hidden="true">
           <span>Invito di nozze</span>
           <i></i>
@@ -64,43 +56,6 @@
         </div>
 
         <button class="wax" id="sigillo" type="button" aria-label="Apri la busta dell'invito">
-          <!-- Forma della cera: bordo irregolare ottenuto deformando un cerchio
-               con rumore/filtro SVG, non un cerchio perfetto -> effetto colata reale. -->
-          <svg class="wax-forma" viewBox="0 0 120 120" aria-hidden="true">
-            <defs>
-              <filter id="ceralaccaBordo" x="-30%" y="-30%" width="160%" height="160%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="7" result="rumore" />
-                <feDisplacementMap in="SourceGraphic" in2="rumore" scale="8" xChannelSelector="R" yChannelSelector="G" />
-              </filter>
-              <radialGradient id="ceralaccaColore" cx="34%" cy="26%" r="78%">
-                <stop offset="0%" stop-color="#3d7d5b" />
-                <stop offset="45%" stop-color="#1e4933" />
-                <stop offset="100%" stop-color="#0a2016" />
-              </radialGradient>
-              <radialGradient id="ceralaccaLucido" cx="32%" cy="22%" r="34%">
-                <stop offset="0%" stop-color="#ffffff" stop-opacity=".5" />
-                <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-              </radialGradient>
-            </defs>
-            <ellipse cx="63" cy="70" rx="8" ry="15" fill="url(#ceralaccaColore)" filter="url(#ceralaccaBordo)" opacity=".85" />
-            <circle cx="60" cy="56" r="43" fill="url(#ceralaccaColore)" filter="url(#ceralaccaBordo)" />
-            <circle cx="60" cy="56" r="43" fill="url(#ceralaccaLucido)" filter="url(#ceralaccaBordo)" />
-          </svg>
-          <svg class="wax-anello" viewBox="0 0 80 80" aria-hidden="true">
-            <circle cx="40" cy="40" r="29" />
-            <circle cx="40" cy="40" r="23" />
-            <g class="wax-perle">
-              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(69,40) rotate(45)" />
-              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(60.5,60.5) rotate(45)" />
-              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(40,69) rotate(45)" />
-              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(19.5,60.5) rotate(45)" />
-              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(11,40) rotate(45)" />
-              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(19.5,19.5) rotate(45)" />
-              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(40,11) rotate(45)" />
-              <rect x="-2.2" y="-2.2" width="4.4" height="4.4" transform="translate(60.5,19.5) rotate(45)" />
-            </g>
-          </svg>
-          <span class="wax-iniziali script" id="sigilloIniziali">G&amp;T</span>
         </button>
 
         <!-- Luce morbida sulla carta, per dare profondità senza coprire il testo. -->
@@ -108,6 +63,12 @@
 
         <p class="script busta-nomi" id="bustaNomi">Gaetano &amp; Tiziana</p>
         <button class="pill-apri" id="bustaCta" type="button">Apri la busta</button>
+
+        <!-- Le due metà della busta si aprono dal centro, come un sipario. -->
+        <div class="busta-teatro" aria-hidden="true">
+          <span></span>
+          <span></span>
+        </div>
       </div>
     </section>
 
@@ -209,6 +170,6 @@
     </main>
 
     <script src="assets/config.js?v=12"></script>
-    <script src="assets/app.js?v=15"></script>
+    <script src="assets/app.js?v=18"></script>
   </body>
 </html>

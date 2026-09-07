@@ -48,8 +48,6 @@
   testo("#dataTesto", W.dataTesto);
   testo("#oraTesto", W.oraTesto);
   testo("#bustaData", W.dataBreve || "");
-  testo("#letterNomi", `${W.sposo} & ${W.sposa}`);
-  testo("#letterData", W.dataBreve || "");
   testo("#salutoTop", ospite.saluto);
   // Dress code: sezione sospesa (vedi index.html). W.dressCode resta in config.js.
   // testo("#dressCode", W.dressCode);
@@ -170,24 +168,23 @@
   const invito = $("#invito");
   let aperto = false;
 
-  // Iniziali sul sigillo di ceralacca e nome sotto la busta: dal nome, non a mano.
-  const iniziale = (n) => (n || "").trim().charAt(0).toUpperCase();
-  testo("#sigilloIniziali", `${iniziale(W.sposo)}&${iniziale(W.sposa)}`);
   testo("#bustaNomi", `${W.sposo} & ${W.sposa}`);
 
   function apri() {
     if (aperto) return;
     aperto = true;
-    scena.classList.add("si-apre");            // sigillo, lembo e foglio iniziano a muoversi
-    requestAnimationFrame(() => scena.classList.add("aperta"));
+    // Prima la busta diventa il fondale a tutta pagina, poi si apre come un teatro.
+    scena.classList.add("busta-aperta");
     setTimeout(() => {
-      scena.classList.add("via");
+      scena.classList.add("teatro");
       invito.hidden = false;
       document.body.classList.remove("no-scroll");
       requestAnimationFrame(() => invito.classList.add("dentro"));
+    }, 900);
+    setTimeout(() => {
+      scena.style.display = "none";
       petali();
-      setTimeout(() => { scena.style.display = "none"; }, 1000);
-    }, 1700);
+    }, 2450);
   }
 
   document.body.classList.add("no-scroll");
