@@ -174,7 +174,7 @@
     if (aperto) return;
     aperto = true;
     // Il lembo superiore si apre; il corpo della busta resta fermo.
-    scena.classList.add("busta-aperta");
+    scena.classList.add("apri_busta");
     setTimeout(() => {
       invito.hidden = false;
       document.body.classList.remove("no-scroll");

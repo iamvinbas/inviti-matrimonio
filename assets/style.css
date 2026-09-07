@@ -108,21 +108,10 @@ body.no-scroll{overflow:hidden;height:100svh}
   border:1px solid rgba(111,76,49,.18);border-radius:2px;
   box-shadow:inset 0 0 28px rgba(116,80,50,.09);
 }
-.scena.busta-aperta .busta-full{
+.scena.apri_busta .busta-full{
   width:100vw;height:100svh;min-height:100svh;
   border-radius:0;border-color:transparent;box-shadow:none;
 }
-
-/* Pieghe: il triangolo superiore è il lembo, quello inferiore la tasca. */
-.busta-pieghe{
-  position:absolute;inset:0;width:100%;height:100%;
-  pointer-events:none;z-index:3;
-}
-.busta-pieghe path{
-  fill:none;stroke:rgba(111,76,49,.2);stroke-width:1.1;
-  vector-effect:non-scaling-stroke;
-}
-.busta-pieghe .tasca{fill:rgba(110,73,44,.08);stroke:rgba(111,76,49,.14);stroke-width:1.1}
 
 /* Il lembo vero è HTML: Safari gestisce la rotazione 3D in modo più affidabile
    rispetto a una trasformazione applicata direttamente a un path SVG. */
@@ -131,14 +120,13 @@ body.no-scroll{overflow:hidden;height:100svh}
   transform-origin:50% 100%;transform-style:preserve-3d;
   clip-path:polygon(0 0,100% 0,50% 100%);
   background:
-    linear-gradient(135deg,transparent 48.8%,rgba(111,76,49,.25) 49.5%,transparent 50.2%) left top/50% 100% no-repeat,
-    linear-gradient(225deg,transparent 48.8%,rgba(111,76,49,.25) 49.5%,transparent 50.2%) right top/50% 100% no-repeat,
-    var(--busta-sfondo);
+    linear-gradient(150deg,rgba(255,255,255,.32),transparent 58%),
+    linear-gradient(160deg,#f7eee3,#dfccb7);
   box-shadow:0 7px 12px rgba(55,34,18,.16);
   transition:transform 1.05s cubic-bezier(.22,1,.36,1),opacity .35s ease .55s;
   backface-visibility:hidden;
 }
-.scena.busta-aperta .busta-flap{
+.scena.apri_busta .busta-flap{
   transform:rotateX(78deg);opacity:.2;
 }
 
@@ -169,7 +157,7 @@ body.no-scroll{overflow:hidden;height:100svh}
   border-radius:48% 52% 50% 47% / 51% 48% 53% 49%;
   transform:rotate(-1.5deg);
 }
-.scena.busta-aperta .wax{
+.scena.apri_busta .wax{
   opacity:0;transform:translate(-50%,-50%) scale(.9);pointer-events:none;
 }
 .wax:hover{transform:translate(-50%,-50%) scale(1.05)}
@@ -195,9 +183,9 @@ body.no-scroll{overflow:hidden;height:100svh}
 .pill-apri:hover{background:rgba(255,255,255,.75);border-color:#9b7847}
 .pill-apri:focus-visible{outline:2px dashed var(--oro-chiaro);outline-offset:4px}
 
-.scena.busta-aperta .busta-intestazione,
-.scena.busta-aperta .busta-nomi,
-.scena.busta-aperta .pill-apri{
+.scena.apri_busta .busta-intestazione,
+.scena.apri_busta .busta-nomi,
+.scena.apri_busta .pill-apri{
   opacity:0;transform:translate(-50%,10px);pointer-events:none;
 }
 
