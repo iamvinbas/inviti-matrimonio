@@ -221,11 +221,15 @@ body.no-scroll{overflow:hidden;height:100svh}
 .scena.teatro .pill-apri{opacity:0;transform:translate(-50%,10px);pointer-events:none}
 
 @media (max-width:520px){
-  .busta-full{width:calc(100vw - 2rem);height:min(88svh,650px);min-height:500px}
-  .busta-intestazione{top:9%;font-size:.52rem;letter-spacing:.2em;gap:.55rem}
-  .wax{top:44%;width:clamp(86px,24vw,112px);height:clamp(86px,24vw,112px)}
+  .busta-full{
+    width:100vw;height:100svh;min-height:100svh;
+    border-radius:0;
+    box-shadow:inset 0 0 46px rgba(76,46,27,.12),inset 0 1px 0 rgba(255,255,255,.75);
+  }
+  .busta-intestazione{top:14%;font-size:.52rem;letter-spacing:.2em;gap:.55rem}
+  .wax{top:44%;width:clamp(90px,24vw,118px);height:clamp(90px,24vw,118px)}
   .busta-nomi{top:60%;font-size:clamp(2.25rem,12vw,3.25rem)}
-  .pill-apri{top:78%;padding:.78rem 1.3rem;font-size:.58rem}
+  .pill-apri{top:75%;padding:.78rem 1.3rem;font-size:.58rem}
 }
 
 /* =========================================================
