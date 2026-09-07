@@ -175,11 +175,11 @@
   function apri() {
     if (aperto) return;
     aperto = true;
-    // Prima ruotano insieme lembo e cera, poi il biglietto esce dalla tasca.
+    // Prima lembo e cera salgono insieme verso l'alto, poi il biglietto esce dalla tasca.
     scena.classList.add("apri_busta");
     setTimeout(() => {
       scena.classList.add("biglietto_esce");
-    }, 850);
+    }, 900);
     setTimeout(() => {
       invito.hidden = false;
       document.body.classList.remove("no-scroll");

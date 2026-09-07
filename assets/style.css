@@ -140,11 +140,13 @@ body.no-scroll{overflow:hidden;height:100svh}
   transform:translate(-50%,0) rotate(-1.2deg);opacity:1;
 }
 
-/* Lembo e cera condividono la stessa cerniera, come in una busta reale. */
+/* Lembo e cera condividono la stessa cerniera, come in una busta reale:
+   salgono insieme verso l'alto e escono dalla busta (clip dato da overflow:hidden
+   su .busta-full), lasciando poi uscire il biglietto. */
 .busta-flap-wrap{
   position:absolute;left:0;top:0;width:100%;height:44%;z-index:4;
   transform-origin:50% 100%;transform-style:preserve-3d;
-  transition:transform 1.1s cubic-bezier(.22,1,.36,1);
+  transition:transform 1.15s cubic-bezier(.16,1,.3,1);
   pointer-events:none;
 }
 .busta-flap{
@@ -156,7 +158,7 @@ body.no-scroll{overflow:hidden;height:100svh}
   box-shadow:0 7px 12px rgba(55,34,18,.16);
 }
 .scena.apri_busta .busta-flap-wrap{
-  transform:rotateX(78deg);
+  transform:translateY(-130%) rotateX(-14deg);
 }
 
 .busta-intestazione{
