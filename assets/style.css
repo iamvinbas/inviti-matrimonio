@@ -17,7 +17,9 @@
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;background-color:var(--verde)}
+html:has(body.no-scroll){overscroll-behavior:none}
+a,button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 body{
   background:
     radial-gradient(120% 80% at 50% 0%, #1b2d26 0%, var(--verde) 55%, #08110e 100%);
@@ -68,8 +70,8 @@ body.no-scroll{overflow:hidden;height:100svh}
    SCENA 1 — busta fisica (carta, pieghe e sigillo)
    ========================================================= */
 .scena{
-  position:relative;z-index:20;
-  min-height:100svh;display:block;overflow:hidden;
+  position:fixed;inset:0;z-index:20;
+  display:block;overflow:hidden;
   background:
     radial-gradient(ellipse at 50% 42%,rgba(39,73,58,.72) 0%,rgba(15,26,23,0) 47%),
     radial-gradient(ellipse at 50% 100%,#08110e 0%,var(--verde) 70%);
@@ -77,6 +79,7 @@ body.no-scroll{overflow:hidden;height:100svh}
   transition:opacity .9s ease, transform .9s ease;
 }
 .scena.via{opacity:0;pointer-events:none}
+.scena.via .busta-full{transform:translate(-50%,-50%) scale(1.07)}
 
 /* La busta è un oggetto centrato: ombra, bordo e luce la fanno sembrare
    appoggiata davanti all'utente invece che stampata sullo sfondo. */
@@ -95,8 +98,16 @@ body.no-scroll{overflow:hidden;height:100svh}
   background:var(--busta-sfondo);
   border:1px solid rgba(111,76,49,.24);border-radius:4px 4px 7px 7px;
   box-shadow:0 34px 70px rgba(0,0,0,.45),0 8px 16px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.75);
-  transition:background .05s linear;
+  transition:transform 1s cubic-bezier(.22,1,.36,1);
 }
+.busta-full::before{
+  content:"";position:absolute;inset:0;z-index:6;pointer-events:none;
+  background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.30) 50%,transparent 62%);
+  transform:translateX(-110%);
+  animation:luceCarta 7s 2.6s ease-in-out infinite;
+}
+@keyframes luceCarta{0%{transform:translateX(-110%)}32%,100%{transform:translateX(110%)}}
+.scena.apri_busta .busta-full::before{animation:none;opacity:0}
 .busta-full::after{
   content:"";position:absolute;inset:12px;z-index:0;pointer-events:none;
   border:1px solid rgba(111,76,49,.32);border-radius:2px;
@@ -147,14 +158,20 @@ body.no-scroll{overflow:hidden;height:100svh}
     linear-gradient(160deg,#f7eee3,#dfccb7);
   box-shadow:0 7px 12px rgba(55,34,18,.16);
 }
-@keyframes apriLembo{
-  0%{transform:rotateX(0deg);filter:brightness(1)}
-  55%{transform:rotateX(100deg);filter:brightness(1.1)}
-  100%{transform:rotateX(184deg);filter:brightness(.92)}
+.busta-flap::after{
+  content:"";position:absolute;inset:0;opacity:0;
+  background:linear-gradient(180deg,rgba(70,44,24,.05),rgba(70,44,24,.22));
 }
+@keyframes apriLembo{
+  0%{transform:rotateX(0deg)}
+  55%{transform:rotateX(100deg)}
+  100%{transform:rotateX(184deg)}
+}
+@keyframes ombraLembo{0%,45%{opacity:0}100%{opacity:1}}
 .scena.apri_busta .busta-flap-wrap{
   animation:apriLembo 1.1s cubic-bezier(.45,.05,.55,.95) forwards;
 }
+.scena.apri_busta .busta-flap::after{animation:ombraLembo 1.1s ease forwards}
 
 .busta-intestazione{
   position:absolute;left:50%;top:10%;transform:translateX(-50%);z-index:5;
@@ -176,12 +193,20 @@ body.no-scroll{overflow:hidden;height:100svh}
   transition:transform .5s cubic-bezier(.22,1,.36,1);
 }
 .wax::before{
-  content:"";position:absolute;inset:-2%;z-index:0;
-  background:url("cera.jpeg") center 50% / 120% auto no-repeat;
-  border-radius:48% 52% 50% 47% / 51% 48% 53% 49%;
+  content:"";position:absolute;z-index:0;
+  inset:-5%;
+  background:url("sigillo.webp") center / contain no-repeat;
   transform:rotate(-1.5deg);
 }
+.wax::after{
+  content:"";position:absolute;inset:6%;border-radius:50%;pointer-events:none;
+  border:1.5px solid rgba(201,162,39,.75);opacity:0;
+}
+.scena.pronta .wax::after{animation:anelloSigillo 2.8s 2.2s ease-out infinite}
+@keyframes anelloSigillo{0%{transform:scale(.95);opacity:.8}70%,100%{transform:scale(1.55);opacity:0}}
+.scena.apri_busta .wax::after{animation:none;opacity:0}
 .wax:hover{transform:translate(-50%,-50%) scale(1.05)}
+.wax:active,.wax.premuto{transform:translate(-50%,-50%) scale(.92);transition-duration:.12s}
 .wax:focus-visible{outline:2px dashed var(--oro-chiaro);outline-offset:5px}
 
 /* nome e invito ad aprire, sotto il sigillo */
@@ -204,6 +229,20 @@ body.no-scroll{overflow:hidden;height:100svh}
 .pill-apri:hover{background:rgba(255,255,255,.75);border-color:#9b7847}
 .pill-apri:focus-visible{outline:2px dashed var(--oro-chiaro);outline-offset:4px}
 
+@keyframes suCentro{from{opacity:0;transform:translate(-50%,14px)}}
+@keyframes suX{from{opacity:0;transform:translate(-50%,10px)}}
+@keyframes timbro{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(1.8)}
+  60%{opacity:1;transform:translate(-50%,-50%) scale(.93)}
+  100%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+}
+.scena:not(.pronta) :is(.busta-intestazione,.busta-nomi,.pill-apri,.wax){opacity:0}
+.scena.pronta .busta-intestazione{animation:suX .9s .1s cubic-bezier(.22,1,.36,1) backwards}
+.scena.pronta .wax{animation:timbro .75s .35s cubic-bezier(.3,.7,.4,1) backwards}
+.scena.pronta .busta-nomi{animation:suCentro 1s .75s cubic-bezier(.22,1,.36,1) backwards}
+.scena.pronta .pill-apri{animation:suCentro 1s 1s cubic-bezier(.22,1,.36,1) backwards}
+.pill-apri:active{background:rgba(255,255,255,.85)}
+
 .scena.apri_busta .busta-intestazione,
 .scena.apri_busta .busta-nomi,
 .scena.apri_busta .pill-apri{
@@ -211,8 +250,10 @@ body.no-scroll{overflow:hidden;height:100svh}
 }
 
 @media (max-width:520px){
+  html:has(body.no-scroll){background-color:#e6d8c6}
+  .scena{background:#e6d8c6}
   .busta-full{
-    width:100vw;height:100svh;min-height:100svh;
+    width:100%;height:100%;min-height:0;
     border-radius:0;
     box-shadow:inset 0 0 46px rgba(76,46,27,.12),inset 0 0 0 1px rgba(111,76,49,.22);
   }
@@ -222,12 +263,22 @@ body.no-scroll{overflow:hidden;height:100svh}
   .pill-apri{top:75%;padding:.78rem 1.3rem;font-size:.58rem}
 }
 
+@media (orientation:landscape) and (max-height:520px){
+  .busta-full{width:min(86vw,760px);height:calc(100% - 24px);min-height:0}
+  .busta-intestazione{top:7%;font-size:.52rem}
+  .wax{width:clamp(64px,19svh,92px);height:clamp(64px,19svh,92px)}
+  .busta-nomi{top:55%;font-size:clamp(1.9rem,11svh,3rem)}
+  .pill-apri{top:auto;bottom:8%;padding:.7rem 1.4rem;font-size:.58rem}
+  .busta-letter{top:8%;height:84%;width:min(62%,440px);padding:.8rem}
+  .letter-nomi{font-size:clamp(1.6rem,10svh,2.6rem);margin:.5rem 0}
+}
+
 /* =========================================================
    SCENA 2 — invito
    ========================================================= */
 .invito{
   position:relative;z-index:10;
-  max-width:640px;margin:0 auto;padding:0 1.4rem 5rem;
+  max-width:640px;margin:0 auto;padding:0 1.4rem calc(5rem + env(safe-area-inset-bottom));
   opacity:0;transform:translateY(24px);
   transition:opacity 1.1s ease, transform 1.1s ease;
 }
@@ -240,7 +291,38 @@ body.no-scroll{overflow:hidden;height:100svh}
   margin:.4rem 0 0;line-height:.95;color:var(--avorio);
 }
 .hero h1 em{display:block;font-style:normal;font-size:.42em;color:var(--oro-chiaro);margin:.1em 0}
-.lead{margin:.4rem 0 1.6rem;font-size:1.15rem;opacity:.9}
+.hero h1 span{display:inline-block;padding:0 .12em}
+.lead{margin:.4rem 0 1.6rem;font-size:1.15rem;opacity:.9;text-wrap:balance}
+@media (max-width:360px){.lead br{display:none}}
+
+@keyframes sali{from{opacity:0;transform:translateY(18px)}}
+@keyframes appari{from{opacity:0}}
+@keyframes traccia{from{opacity:0;transform:scaleX(0)}}
+@keyframes scrivi{
+  from{clip-path:inset(-40% 104% -60% -8%)}
+  to{clip-path:inset(-40% -12% -60% -8%)}
+}
+.invito.dentro .hero > :is(.occhiello,.mono,.lead,.data-big,.posti,.msg-personale){
+  animation:sali 1s cubic-bezier(.22,1,.36,1) backwards;
+}
+.invito.dentro .hero > .occhiello{animation-delay:.25s}
+.invito.dentro .hero > .mono{animation-delay:.4s}
+.invito.dentro .hero h1 span{animation:scrivi 1.25s cubic-bezier(.65,0,.35,1) backwards}
+.invito.dentro #nomeSposo{animation-delay:.6s}
+.invito.dentro #nomeSposa{animation-delay:1.15s}
+.invito.dentro .hero h1 em{animation:appari .9s 1s ease backwards}
+.invito.dentro .hero > .rule{animation:traccia 1.1s 1.7s cubic-bezier(.22,1,.36,1) backwards}
+.invito.dentro .hero > .lead{animation-delay:1.9s}
+.invito.dentro .hero > .data-big{animation-delay:2.1s}
+.invito.dentro .hero > .posti{animation-delay:2.25s}
+.invito.dentro .hero > .msg-personale{animation-delay:2.35s}
+.invito.dentro .scroll-cue{animation:appari 1s 2.7s ease backwards}
+
+/* il titolo si allontana piano mentre si scorre (solo browser che lo supportano, nessun JS) */
+@supports (animation-timeline: scroll()){
+  @keyframes heroEsce{to{transform:translateY(12svh);opacity:0}}
+  .hero{animation:heroEsce linear both;animation-timeline:scroll(root);animation-range:0 80svh}
+}
 .data-big{
   font-family:var(--titolo);letter-spacing:.14em;text-transform:uppercase;
   font-size:.95rem;margin:0;color:var(--oro-chiaro);
@@ -262,17 +344,29 @@ body.no-scroll{overflow:hidden;height:100svh}
   transition:opacity .9s ease, transform .9s ease;
 }
 .blocco.reveal.visto{opacity:1;transform:none}
+.blocco.visto > *{animation:sali .9s cubic-bezier(.22,1,.36,1) backwards}
+.blocco.visto > :nth-child(2){animation-delay:.12s}
+.blocco.visto > :nth-child(3){animation-delay:.24s}
+.blocco.visto > :nth-child(4){animation-delay:.36s}
+.blocco.visto .luogo{animation:sali 1s .2s cubic-bezier(.22,1,.36,1) backwards}
+.blocco.visto .luogo + .luogo{animation-delay:.45s}
 .titolo{
   font-family:var(--titolo);font-weight:500;text-transform:uppercase;
   letter-spacing:.28em;font-size:.78rem;color:var(--oro-chiaro);
   margin:0 0 1.6rem;
 }
+.titolo::after{
+  content:"";display:block;width:28px;height:1px;margin:.85rem auto 0;
+  background:var(--oro);transform:scaleX(0);
+  transition:transform 1.1s .35s cubic-bezier(.22,1,.36,1);
+}
+.visto .titolo::after{transform:scaleX(1)}
 .testo{margin:0 auto;max-width:36ch;opacity:.9}
 .testo.piccolo{font-size:.85rem;opacity:.65;margin-top:.6rem}
 
 /* countdown */
 .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;max-width:20rem;margin-inline:auto}
-.cd-cella{min-width:0}
+.cd-cella{min-width:0;overflow:hidden}
 .cd-num{display:block;font-family:var(--titolo);font-size:clamp(1.5rem,7vw,1.9rem);color:var(--avorio);line-height:1}
 .cd-lab{font-family:var(--titolo);text-transform:uppercase;letter-spacing:.2em;font-size:.6rem;opacity:.6}
 
@@ -299,6 +393,7 @@ body.no-scroll{overflow:hidden;height:100svh}
   background:rgba(255,255,255,.05);padding:.6rem .9rem;border-radius:3px;
   border:1px solid rgba(227,200,111,.2);
   max-width:100%;overflow-wrap:anywhere;
+  -webkit-user-select:all;user-select:all;
 }
 
 /* bottoni */
@@ -309,14 +404,25 @@ body.no-scroll{overflow:hidden;height:100svh}
   padding:.95rem 1.7rem;border:1px solid var(--oro);border-radius:2px;
   background:var(--oro);color:#14201a;
   transition:transform .25s ease, background .25s ease, color .25s ease;
+  position:relative;overflow:hidden;
 }
 .btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.97)}
+.btn:not(.btn-secondario)::after{
+  content:"";position:absolute;top:0;bottom:0;left:0;width:55%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);
+  transform:translateX(-160%) skewX(-18deg);
+  animation:riflesso 5s 1.2s ease-in-out infinite;
+}
+@keyframes riflesso{0%{transform:translateX(-160%) skewX(-18deg)}28%,100%{transform:translateX(280%) skewX(-18deg)}}
 .btn-secondario{background:transparent;color:var(--oro-chiaro)}
 .btn-ghost{
   background:none;border:0;cursor:pointer;color:var(--avorio);
   font-family:var(--titolo);text-transform:uppercase;letter-spacing:.18em;font-size:.65rem;
   opacity:.7;padding:.7rem .4rem;border-bottom:1px solid rgba(227,200,111,.35);
+  min-height:44px;display:inline-flex;align-items:center;justify-content:center;
 }
+.btn-ghost:active{opacity:1}
 .btn-ghost:hover{opacity:1}
 
 .chiusura{text-align:center;padding-top:3rem;opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s ease}
@@ -325,7 +431,7 @@ body.no-scroll{overflow:hidden;height:100svh}
 
 /* toast */
 .toast{
-  position:fixed;left:50%;bottom:2rem;transform:translate(-50%,140%);
+  position:fixed;left:50%;bottom:calc(2rem + env(safe-area-inset-bottom));transform:translate(-50%,160%);
   background:var(--avorio);color:var(--testo);padding:.7rem 1.2rem;border-radius:3px;
   font-size:.9rem;z-index:80;transition:transform .4s cubic-bezier(.22,1,.36,1);
 }
@@ -335,7 +441,8 @@ body.no-scroll{overflow:hidden;height:100svh}
   .luoghi{grid-template-columns:1fr 1fr;gap:2rem;text-align:center}
 }
 @media (prefers-reduced-motion:reduce){
-  *{animation-duration:.001ms !important;transition-duration:.18s !important}
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;animation-delay:0s !important;transition-duration:.18s !important;transition-delay:0s !important}
+  .hero{animation:none !important}
 }
 
 /* firma di chi ha realizzato l'invito — deve restare discreta */
@@ -358,7 +465,7 @@ body.no-scroll{overflow:hidden;height:100svh}
 }
 .credito-link{display:flex;justify-content:center;gap:1.1rem}
 .credito-link a{
-  display:grid;place-items:center;width:34px;height:34px;
+  display:grid;place-items:center;width:44px;height:44px;
   border:1px solid rgba(227,200,111,.28);border-radius:50%;
   color:var(--oro-chiaro);
   transition:background .25s ease, color .25s ease, transform .25s ease;

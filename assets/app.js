@@ -5,6 +5,7 @@
   "use strict";
   const W = window.WEDDING;
   const $ = (s) => document.querySelector(s);
+  const riduci = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------- 1. Chi sta guardando l'invito ----------
      I dati dell'invitato NON stanno sul sito: viaggiano dentro il link,
@@ -114,20 +115,52 @@
   cdBox.innerHTML = celle.map(([l]) =>
     `<div class="cd-cella"><span class="cd-num">--</span><span class="cd-lab">${l}</span></div>`).join("");
   const nums = cdBox.querySelectorAll(".cd-num");
+  const due = (x) => String(x).padStart(2, "0");
+  let staContando = false;   // durante il conteggio iniziale tick() non scrive
+
+  function valori() {
+    const d = Math.max(0, Math.floor((dataEvento - Date.now()) / 1000));
+    return [Math.floor(d / 86400), Math.floor(d / 3600) % 24, Math.floor(d / 60) % 60, d % 60];
+  }
+  // Scrive una cifra; se cambia, la fa scendere dall'alto (Web Animations: niente reflow).
+  function mostra(i, x) {
+    const el = nums[i], t = due(x);
+    if (el.textContent === t) return;
+    const primaVolta = el.textContent === "--";
+    el.textContent = t;
+    if (!primaVolta && !riduci && el.animate) {
+      el.animate(
+        [{ transform: "translateY(-45%)", opacity: 0 }, { transform: "none", opacity: 1 }],
+        { duration: 450, easing: "cubic-bezier(.22,1,.36,1)" }
+      );
+    }
+  }
   function tick() {
-    let d = dataEvento - Date.now();
-    if (d <= 0) { $("#countdownBox").innerHTML = '<h3 class="titolo">È il giorno giusto</h3>'; return; }
-    d = Math.floor(d / 1000);
-    const v = [Math.floor(d / 86400), Math.floor(d / 3600) % 24, Math.floor(d / 60) % 60, d % 60];
-    v.forEach((x, i) => { nums[i].textContent = String(x).padStart(2, "0"); });
-    setTimeout(tick, 1000);
+    if (dataEvento - Date.now() <= 0) { $("#countdownBox").innerHTML = '<h3 class="titolo">È il giorno giusto</h3>'; return; }
+    if (!staContando) valori().forEach((x, i) => mostra(i, x));
+    setTimeout(tick, 1000 - (Date.now() % 1000) + 10);   // allineato al cambio di secondo
   }
   tick();
+
+  // Quando il countdown entra nello schermo i numeri salgono da zero al valore vero.
+  function contaSu() {
+    if (riduci || staContando || dataEvento - Date.now() <= 0) return;
+    staContando = true;
+    const t0 = performance.now(), durata = 1500;
+    (function passo(t) {
+      const k = Math.min(1, (t - t0) / durata), e = 1 - Math.pow(1 - k, 3);
+      valori().forEach((x, i) => { nums[i].textContent = due(Math.round(x * e)); });
+      if (k < 1) requestAnimationFrame(passo);
+      else staContando = false;
+    })(t0);
+  }
 
   /* ---------- 5. Calendario (.ics) ---------- */
   $("#btnCal").addEventListener("click", () => {
     const fine = new Date(dataEvento.getTime() + 8 * 3600 * 1000);
     const fmt = (dt) => dt.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    // Nel formato .ics virgole, punti e virgola e backslash vanno preceduti da "\"
+    const esc = (t) => String(t).replace(/\\/g, "\\\\").replace(/([,;])/g, "\\$1");
     const ics = [
       "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//invito//IT",
       "BEGIN:VEVENT",
@@ -135,24 +168,42 @@
       "DTSTAMP:" + fmt(new Date()),
       "DTSTART:" + fmt(dataEvento),
       "DTEND:" + fmt(fine),
-      `SUMMARY:Matrimonio di ${W.sposo} e ${W.sposa}`,
-      `LOCATION:${W.cerimonia.luogo}\\, ${W.cerimonia.indirizzo}`,
-      `DESCRIPTION:${W.cerimonia.ora} cerimonia — ${W.ricevimento.ora} ricevimento a ${W.ricevimento.luogo}`,
+      `SUMMARY:${esc(`Matrimonio di ${W.sposo} e ${W.sposa}`)}`,
+      `LOCATION:${esc(`${W.cerimonia.luogo}, ${W.cerimonia.indirizzo}`)}`,
+      `DESCRIPTION:${esc(`${W.cerimonia.ora} cerimonia — ${W.ricevimento.ora} ricevimento a ${W.ricevimento.luogo}`)}`,
       "END:VEVENT", "END:VCALENDAR"
     ].join("\r\n");
     const url = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
     const a = document.createElement("a");
-    a.href = url; a.download = "matrimonio.ics"; a.click();
-    URL.revokeObjectURL(url);
+    a.href = url; a.download = "matrimonio.ics";
+    document.body.appendChild(a); a.click(); a.remove();
+    // Safari annulla il download se l'URL viene revocato subito dopo il click
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
     toast("Evento scaricato");
   });
 
   /* ---------- 6. Copia IBAN ---------- */
   const btnIban = $("#copiaIban");
-  if (btnIban) btnIban.addEventListener("click", () => { copia(W.regalo.iban); toast("IBAN copiato"); });
+  if (btnIban) btnIban.addEventListener("click", () => {
+    copia(W.regalo.iban).then((ok) => toast(ok ? "IBAN copiato" : "Tieni premuto l'IBAN per copiarlo"));
+  });
 
-  function copia(t) {
-    if (navigator.clipboard) navigator.clipboard.writeText(t).catch(() => {});
+  // Clipboard API se c'e', altrimenti il vecchio metodo con textarea (browser in-app, iOS datati)
+  async function copia(t) {
+    try {
+      await navigator.clipboard.writeText(t);
+      return true;
+    } catch (e) {
+      const ta = document.createElement("textarea");
+      ta.value = t; ta.setAttribute("readonly", "");
+      ta.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+      document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, t.length);
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (_) {}
+      ta.remove();
+      return ok;
+    }
   }
   let toastEl;
   function toast(msg) {
@@ -172,26 +223,46 @@
   testo("#bustaNomi", `${W.sposo} & ${W.sposa}`);
   testo("#letterNomi", `${W.sposo} & ${W.sposa}`);
 
+  const metaTema = $('meta[name="theme-color"]');
+  const VERDE = "#0f1a17", CARTA = "#e6d8c6";
+  // Su telefono la busta riempie lo schermo: la barra del browser prende il colore della carta.
+  if (metaTema && window.matchMedia("(max-width:520px)").matches) metaTema.content = CARTA;
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+
+  // L'ingresso della busta parte solo quando i font sono pronti (max 1,2 s), cosi'
+  // il corsivo non "salta" da un font di ripiego a Pinyon Script davanti all'utente.
+  Promise.race([
+    document.fonts ? document.fonts.ready : Promise.resolve(),
+    new Promise((r) => setTimeout(r, 1200))
+  ]).then(() => scena.classList.add("pronta"));
+
   function apri() {
     if (aperto) return;
     aperto = true;
-    // Prima lembo e cera salgono insieme verso l'alto, poi il biglietto esce dalla tasca.
-    scena.classList.add("apri_busta");
-    setTimeout(() => {
-      scena.classList.add("biglietto_esce");
-    }, 900);
-    setTimeout(() => {
+    scena.classList.add("pronta");
+    const k = riduci ? 0.3 : 1;          // con "riduci movimento" la sequenza e' molto piu' breve
+    const dopo = (ms, fn) => setTimeout(fn, ms * k);
+
+    // 1. il sigillo si schiaccia sotto il dito (e su Android una vibrazione leggera)
+    sigillo.classList.add("premuto");
+    if (navigator.vibrate) navigator.vibrate(12);
+    // 2. lembo e cera salgono insieme verso l'alto
+    dopo(160, () => { sigillo.classList.remove("premuto"); scena.classList.add("apri_busta"); });
+    // 3. il biglietto esce dalla tasca e resta visibile un attimo
+    dopo(1000, () => scena.classList.add("biglietto_esce"));
+    // 4. la busta si dissolve e sotto, gia' al suo posto, compare l'invito (niente salti)
+    dopo(2700, () => {
+      window.scrollTo(0, 0);
       invito.hidden = false;
       document.body.classList.remove("no-scroll");
-      requestAnimationFrame(() => invito.classList.add("dentro"));
-    }, 1450);
-    setTimeout(() => {
-      scena.classList.add("via");
-    }, 1950);
-    setTimeout(() => {
-      scena.style.display = "none";
+      if (metaTema) metaTema.content = VERDE;
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        invito.classList.add("dentro");
+        scena.classList.add("via");
+      }));
       petali();
-    }, 2850);
+    });
+    dopo(3800, () => { scena.style.display = "none"; });
   }
 
   document.body.classList.add("no-scroll");
@@ -200,7 +271,12 @@
 
   /* ---------- 8. Comparsa sezioni allo scroll ---------- */
   const io = new IntersectionObserver((voci) => {
-    voci.forEach((v) => { if (v.isIntersecting) { v.target.classList.add("visto"); io.unobserve(v.target); } });
+    voci.forEach((v) => {
+      if (!v.isIntersecting) return;
+      v.target.classList.add("visto");
+      if (v.target.id === "countdownBox") contaSu();
+      io.unobserve(v.target);
+    });
   }, { threshold: 0.18 });
   document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
 
@@ -232,33 +308,61 @@
     el.hidden = false;
   })();
 
-  /* ---------- 10. Petali dorati ---------- */
+  /* ---------- 10. Petali dorati ----------
+     All'apertura cade una pioggia piu' fitta e veloce che poi si dirada
+     nei soliti 18 petali lenti. Il canvas e' limitato a 2x di densita'
+     (3x su iPhone = 2,25 volte i pixel, invisibile a occhio) e non viene
+     riallocato quando la barra di Safari compare/scompare durante lo scroll. */
   function petali() {
+    if (riduci) return;
     const c = $("#petals"), x = c.getContext("2d");
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let w, h, p = [];
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let w = 0, h = 0, cw = 0, ch = 0;
     const ridimensiona = () => {
-      w = c.width = innerWidth * devicePixelRatio;
-      h = c.height = innerHeight * devicePixelRatio;
-      c.style.width = innerWidth + "px"; c.style.height = innerHeight + "px";
+      const nw = window.innerWidth, nh = window.innerHeight;
+      if (nw === cw && nh <= ch) return;   // solo la barra del browser: il canvas e' gia' abbastanza alto
+      cw = nw; ch = nh;
+      w = c.width = Math.round(cw * dpr);
+      h = c.height = Math.round(ch * dpr);
+      c.style.width = cw + "px"; c.style.height = ch + "px";
     };
-    ridimensiona(); addEventListener("resize", ridimensiona);
-    for (let i = 0; i < 18; i++) {
-      p.push({ x: Math.random() * w, y: Math.random() * h, r: (2 + Math.random() * 3) * devicePixelRatio,
-               vy: (.25 + Math.random() * .55) * devicePixelRatio, a: Math.random() * 6.28,
-               va: (Math.random() - .5) * .02, o: .10 + Math.random() * .16 });
-    }
+    ridimensiona();
+    window.addEventListener("resize", ridimensiona);
+
+    const colori = ["227,200,111", "227,200,111", "201,162,39", "245,240,230"];
+    const nuovo = (pioggia) => {
+      const base = (.25 + Math.random() * .55) * dpr;
+      return {
+        x: Math.random() * w,
+        y: pioggia ? -Math.random() * h * .7 : Math.random() * h,
+        r: (2 + Math.random() * 3) * dpr,
+        base, vy: pioggia ? base * (3 + Math.random() * 2.5) : base,
+        a: Math.random() * 6.28, va: (Math.random() - .5) * .03,
+        o: pioggia ? .22 + Math.random() * .25 : .10 + Math.random() * .16,
+        col: colori[(Math.random() * colori.length) | 0],
+        pioggia
+      };
+    };
+    const p = [];
+    for (let i = 0; i < 18; i++) p.push(nuovo(false));
+    for (let i = 0; i < 34; i++) p.push(nuovo(true));
     c.classList.add("on");
+
     (function loop() {
       x.clearRect(0, 0, w, h);
-      p.forEach((s) => {
-        s.y += s.vy; s.a += s.va; s.x += Math.sin(s.a) * .4 * devicePixelRatio;
-        if (s.y - s.r > h) { s.y = -s.r; s.x = Math.random() * w; }
+      for (let i = p.length - 1; i >= 0; i--) {
+        const s = p[i];
+        if (s.vy > s.base) s.vy *= .994;      // la pioggia rallenta piano
+        s.y += s.vy; s.a += s.va; s.x += Math.sin(s.a) * .4 * dpr;
+        if (s.y - s.r > h) {
+          if (s.pioggia) { p.splice(i, 1); continue; }   // finita la pioggia restano i 18 lenti
+          s.y = -s.r; s.x = Math.random() * w;
+        }
         x.save(); x.translate(s.x, s.y); x.rotate(s.a);
-        x.fillStyle = `rgba(227,200,111,${s.o})`;
+        x.fillStyle = `rgba(${s.col},${s.o})`;
         x.beginPath(); x.ellipse(0, 0, s.r, s.r * .55, 0, 0, 6.283); x.fill();
         x.restore();
-      });
+      }
       requestAnimationFrame(loop);
     })();
   }
