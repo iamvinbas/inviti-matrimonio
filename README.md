@@ -1,4 +1,4 @@
-# Partecipazione di nozze digitale
+# Partecipazione di nozze digitale 
 
 Sito statico su GitHub Pages. Zero costi, zero backend.
 Si apre tirando il fiocco.
