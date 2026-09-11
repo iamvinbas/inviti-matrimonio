@@ -27,8 +27,6 @@
 
     <!-- Favicon inline: evita la richiesta 404 a /favicon.ico -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1a17'/%3E%3Cpath d='M32 14 50 32 32 50 14 32Z' fill='none' stroke='%23c9a227' stroke-width='3'/%3E%3Cpath d='M32 25 39 32 32 39 25 32Z' fill='%23e3c86f'/%3E%3C/svg%3E" />
-    <!-- Il sigillo e' dentro il CSS: lo anticipiamo, e' la prima cosa che si vede -->
-    <link rel="preload" as="image" href="assets/sigillo.webp" type="image/webp" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,6 +36,23 @@
     />
     <!-- Dopo ogni modifica a css/js: alza ?v= di 1 per bypassare la cache (GitHub Pages usa max-age=600) -->
     <link rel="stylesheet" href="assets/style.css?v=27" />
+
+    <!-- Dati del matrimonio: servono gia' qui per scegliere la palette prima del primo disegno -->
+    <script src="assets/config.js?v=27"></script>
+    <script>
+      /* Palette colori: ?tema=nome nel link (per provarle) oppure W.tema in config.js.
+         Anticipa anche il download del sigillo del colore giusto. */
+      (function () {
+        var temi = ["salvia", "blu-polvere", "bordeaux", "terracotta", "blu-notte", "champagne", "prugna", "oliva"];
+        var t = new URLSearchParams(location.search).get("tema") || (window.WEDDING && window.WEDDING.tema) || "";
+        var ok = temi.indexOf(t) !== -1;
+        if (ok) document.documentElement.setAttribute("data-tema", t);
+        var l = document.createElement("link");
+        l.rel = "preload"; l.as = "image"; l.type = "image/webp";
+        l.href = ok ? "assets/sigilli/" + t + ".webp" : "assets/sigillo.webp";
+        document.head.appendChild(l);
+      })();
+    </script>
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
@@ -168,7 +183,6 @@
       <aside class="credito reveal" id="credito" hidden></aside>
     </main>
 
-    <script src="assets/config.js?v=12"></script>
     <script src="assets/app.js?v=27"></script>
   </body>
 </html>

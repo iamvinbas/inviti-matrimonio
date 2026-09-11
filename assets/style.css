@@ -1,15 +1,46 @@
 /* =========================================================
    Partecipazione di nozze — stile
-   Palette: verde notte + avorio + oro
+   Tutti i colori passano da queste variabili. La palette predefinita
+   e' "verde notte + avorio + oro"; le altre sono in fondo al file
+   (sezione TEMI) e si scelgono con W.tema in config.js o ?tema=nome.
    ========================================================= */
 :root{
-  --verde:#0f1a17;
-  --verde-2:#16241f;
-  --avorio:#f5f0e6;
-  --avorio-2:#e9e1d1;
-  --oro:#c9a227;
-  --oro-chiaro:#e3c86f;
-  --testo:#2a2724;
+  /* --- invito (seconda scena) --- */
+  --fondo:#0f1a17;          /* colore principale dello sfondo */
+  --fondo-alto:#1b2d26;     /* alone in alto */
+  --fondo-basso:#08110e;    /* sfumatura in basso */
+  --testo:#f5f0e6;          /* testo principale */
+  --accento-rgb:201 162 39; /* metallo: filetti, bottone pieno */
+  --accento-testo-rgb:227 200 111; /* testi in colore accento (titoli, date) */
+  --accento:rgb(var(--accento-rgb));
+  --accento-testo:rgb(var(--accento-testo-rgb));
+  --su-accento:#14201a;     /* testo sopra il bottone pieno */
+  --velo:255 255 255;       /* riquadri trasparenti (IBAN): bianco su scuro, nero su chiaro */
+  --toast-fondo:#f5f0e6;
+  --toast-testo:#2a2724;
+  /* --- busta (prima scena) --- */
+  --scena-luce:rgba(39,73,58,.72);  /* alone dietro la busta (desktop) */
+  --scena-fondo:var(--fondo);        /* sfondo attorno alla busta (desktop) */
+  --scena-basso:var(--fondo-basso);
+  --carta-1:#f0e5d5;
+  --carta-2:#d9c4ad;
+  --carta-piena:#e6d8c6;    /* tinta unita della carta: barre del browser su telefono */
+  --lembo-1:#f7eee3;
+  --lembo-2:#dfccb7;
+  --seppia:111 76 49;       /* bordi e ombre calde della carta */
+  --ombra:55 34 18;         /* ombre portate */
+  --filetto:155 120 71;     /* filetti e rombo sulla busta */
+  --busta-testo:#6c5944;
+  --busta-nomi:#23392d;
+  --busta-cta:#344d3e;
+  --biglietto-1:#fffaf0;
+  --biglietto-2:#eadfca;
+  --biglietto-testo:#304c3b;
+  --biglietto-kicker:#806843;
+  --sigillo:url("sigillo.webp");
+  /* petali (letti da app.js): colori r,g,b separati da | */
+  --petali:227,200,111|227,200,111|201,162,39|245,240,230;
+
   --serif:"Cormorant Garamond", Georgia, serif;
   --titolo:"Cinzel", Georgia, serif;
   --script:"Pinyon Script", "Snell Roundhand", cursive;
@@ -17,13 +48,13 @@
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-html{-webkit-text-size-adjust:100%;background-color:var(--verde)}
+html{-webkit-text-size-adjust:100%;background-color:var(--fondo)}
 html:has(body.no-scroll){overscroll-behavior:none}
 a,button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 body{
   background:
-    radial-gradient(120% 80% at 50% 0%, #1b2d26 0%, var(--verde) 55%, #08110e 100%);
-  color:var(--avorio);
+    radial-gradient(120% 80% at 50% 0%, var(--fondo-alto) 0%, var(--fondo) 55%, var(--fondo-basso) 100%);
+  color:var(--testo);
   font-family:var(--serif);
   font-size:clamp(16px,1.1vw + 14px,19px);
   line-height:1.65;
@@ -53,17 +84,17 @@ body.no-scroll{overflow:hidden;height:100svh}
 }
 .rule{
   display:block;width:130px;height:1px;margin:1.5rem auto;
-  background:linear-gradient(90deg,transparent,var(--oro),transparent);
+  background:linear-gradient(90deg,transparent,var(--accento),transparent);
   position:relative;
 }
 .rule::after{
   content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;
   transform:translate(-50%,-50%) rotate(45deg);
-  background:var(--oro);
+  background:var(--accento);
 }
 .occhiello{
   font-family:var(--titolo);text-transform:uppercase;letter-spacing:.3em;
-  font-size:.68rem;color:var(--oro-chiaro);margin:0 0 .5rem;
+  font-size:.68rem;color:var(--accento-testo);margin:0 0 .5rem;
 }
 
 /* =========================================================
@@ -73,8 +104,8 @@ body.no-scroll{overflow:hidden;height:100svh}
   position:fixed;inset:0;z-index:20;
   display:block;overflow:hidden;
   background:
-    radial-gradient(ellipse at 50% 42%,rgba(39,73,58,.72) 0%,rgba(15,26,23,0) 47%),
-    radial-gradient(ellipse at 50% 100%,#08110e 0%,var(--verde) 70%);
+    radial-gradient(ellipse at 50% 42%,var(--scena-luce) 0%,transparent 47%),
+    radial-gradient(ellipse at 50% 100%,var(--scena-basso) 0%,var(--scena-fondo) 70%);
   perspective:1400px;
   transition:opacity .9s ease, transform .9s ease;
 }
@@ -89,14 +120,12 @@ body.no-scroll{overflow:hidden;height:100svh}
   overflow:hidden;
   transform-origin:center center;transform-style:preserve-3d;
   transform:translate(-50%,-50%) rotateX(0deg);
-  --carta-1:#f0e5d5;
-  --carta-2:#d9c4ad;
   --busta-sfondo:
-    linear-gradient(116deg,rgba(255,255,255,.65),transparent 26%,rgba(111,76,49,.12) 100%),
+    linear-gradient(116deg,rgba(255,255,255,.65),transparent 26%,rgb(var(--seppia) / .12) 100%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.2'/%3E%3C/svg%3E"),
     linear-gradient(160deg,var(--carta-1),var(--carta-2));
   background:var(--busta-sfondo);
-  border:1px solid rgba(111,76,49,.24);border-radius:4px 4px 7px 7px;
+  border:1px solid rgb(var(--seppia) / .24);border-radius:4px 4px 7px 7px;
   box-shadow:0 34px 70px rgba(0,0,0,.45),0 8px 16px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.75);
   transition:transform 1s cubic-bezier(.22,1,.36,1);
 }
@@ -110,8 +139,8 @@ body.no-scroll{overflow:hidden;height:100svh}
 .scena.apri_busta .busta-full::before{animation:none;opacity:0}
 .busta-full::after{
   content:"";position:absolute;inset:12px;z-index:0;pointer-events:none;
-  border:1px solid rgba(111,76,49,.32);border-radius:2px;
-  box-shadow:inset 0 0 28px rgba(116,80,50,.09);
+  border:1px solid rgb(var(--seppia) / .32);border-radius:2px;
+  box-shadow:inset 0 0 28px rgb(var(--seppia) / .09);
 }
 
 /* Il biglietto è reale nella scena: parte nascosto dietro la tasca. */
@@ -119,24 +148,24 @@ body.no-scroll{overflow:hidden;height:100svh}
   position:absolute;left:50%;top:13%;width:min(82%,480px);height:72%;z-index:2;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:1.5rem;box-sizing:border-box;text-align:center;
-  color:#304c3b;background:linear-gradient(145deg,#fffaf0,#eadfca);
-  border:1px solid rgba(111,76,49,.3);
-  box-shadow:0 16px 30px rgba(55,34,18,.2),inset 0 0 22px rgba(116,80,50,.08);
+  color:var(--biglietto-testo);background:linear-gradient(145deg,var(--biglietto-1),var(--biglietto-2));
+  border:1px solid rgb(var(--seppia) / .3);
+  box-shadow:0 16px 30px rgb(var(--ombra) / .2),inset 0 0 22px rgb(var(--seppia) / .08);
   transform:translate(-50%,110%) rotate(-1.2deg);opacity:0;
   transition:transform .95s cubic-bezier(.16,1,.3,1),opacity .45s ease;
   pointer-events:none;
 }
 .busta-letter::before,.busta-letter::after{
   content:"";position:absolute;left:12%;right:12%;height:1px;
-  background:rgba(155,120,71,.3);
+  background:rgb(var(--filetto) / .3);
 }
 .busta-letter::before{top:12%}.busta-letter::after{bottom:12%}
 .letter-kicker,.letter-data{
   margin:0;font-family:var(--titolo);font-size:.58rem;letter-spacing:.24em;
-  text-transform:uppercase;color:#806843;
+  text-transform:uppercase;color:var(--biglietto-kicker);
 }
 .letter-nomi{margin:1rem 0 .8rem;font-size:clamp(2rem,8vw,3.4rem);line-height:.95}
-.letter-rule{width:2.2rem;height:1px;background:#9b7847;margin-bottom:.8rem}
+.letter-rule{width:2.2rem;height:1px;background:rgb(var(--filetto));margin-bottom:.8rem}
 .scena.biglietto_esce .busta-letter{
   transform:translate(-50%,0) rotate(-1.2deg);opacity:1;
 }
@@ -155,12 +184,12 @@ body.no-scroll{overflow:hidden;height:100svh}
   clip-path:polygon(0 0,100% 0,50% 100%);
   background:
     linear-gradient(150deg,rgba(255,255,255,.32),transparent 58%),
-    linear-gradient(160deg,#f7eee3,#dfccb7);
-  box-shadow:0 7px 12px rgba(55,34,18,.16);
+    linear-gradient(160deg,var(--lembo-1),var(--lembo-2));
+  box-shadow:0 7px 12px rgb(var(--ombra) / .16);
 }
 .busta-flap::after{
   content:"";position:absolute;inset:0;opacity:0;
-  background:linear-gradient(180deg,rgba(70,44,24,.05),rgba(70,44,24,.22));
+  background:linear-gradient(180deg,rgb(var(--ombra) / .05),rgb(var(--ombra) / .22));
 }
 @keyframes apriLembo{
   0%{transform:rotateX(0deg)}
@@ -176,18 +205,18 @@ body.no-scroll{overflow:hidden;height:100svh}
 .busta-intestazione{
   position:absolute;left:50%;top:10%;transform:translateX(-50%);z-index:5;
   display:flex;align-items:center;gap:.8rem;white-space:nowrap;
-  color:#6c5944;font-family:var(--titolo);font-size:.58rem;
+  color:var(--busta-testo);font-family:var(--titolo);font-size:.58rem;
   text-transform:uppercase;letter-spacing:.27em;
   transition:opacity .35s ease,transform .35s ease;
 }
-.busta-intestazione i{display:block;width:4px;height:4px;background:#9b7847;transform:rotate(45deg)}
+.busta-intestazione i{display:block;width:4px;height:4px;background:rgb(var(--filetto));transform:rotate(45deg)}
 
 /* sigillo di ceralacca */
 .wax{
   position:absolute;left:50%;top:100%;transform:translate(-50%,-50%);z-index:2;
   width:clamp(88px,16vw,126px);height:clamp(88px,16vw,126px);border:0;padding:0;cursor:pointer;
   background:none;border-radius:50%;
-  filter:drop-shadow(0 10px 9px rgba(33,20,12,.35));
+  filter:drop-shadow(0 10px 9px rgb(var(--ombra) / .38));
   display:grid;place-items:center;pointer-events:auto;
   opacity:1;transform:translate(-50%,-50%) scale(1);
   transition:transform .5s cubic-bezier(.22,1,.36,1);
@@ -195,39 +224,39 @@ body.no-scroll{overflow:hidden;height:100svh}
 .wax::before{
   content:"";position:absolute;z-index:0;
   inset:-5%;
-  background:url("sigillo.webp") center / contain no-repeat;
+  background:var(--sigillo) center / contain no-repeat;
   transform:rotate(-1.5deg);
 }
 .wax::after{
   content:"";position:absolute;inset:6%;border-radius:50%;pointer-events:none;
-  border:1.5px solid rgba(201,162,39,.75);opacity:0;
+  border:1.5px solid rgb(var(--accento-rgb) / .75);opacity:0;
 }
 .scena.pronta .wax::after{animation:anelloSigillo 2.8s 2.2s ease-out infinite}
 @keyframes anelloSigillo{0%{transform:scale(.95);opacity:.8}70%,100%{transform:scale(1.55);opacity:0}}
 .scena.apri_busta .wax::after{animation:none;opacity:0}
 .wax:hover{transform:translate(-50%,-50%) scale(1.05)}
 .wax:active,.wax.premuto{transform:translate(-50%,-50%) scale(.92);transition-duration:.12s}
-.wax:focus-visible{outline:2px dashed var(--oro-chiaro);outline-offset:5px}
+.wax:focus-visible{outline:2px dashed var(--accento-testo);outline-offset:5px}
 
 /* nome e invito ad aprire, sotto il sigillo */
 .busta-nomi{
   position:absolute;left:50%;top:60%;transform:translate(-50%,0);z-index:4;
   width:90%;text-align:center;
-  font-size:clamp(2.4rem,8vw,4rem);color:#23392d;margin:0;
+  font-size:clamp(2.4rem,8vw,4rem);color:var(--busta-nomi);margin:0;
   text-shadow:0 1px 0 rgba(255,255,255,.5);
   transition:opacity .5s ease, transform .5s ease;
 }
 .pill-apri{
   position:absolute;left:50%;top:78%;transform:translate(-50%,0);z-index:4;
   font-family:var(--titolo);text-transform:uppercase;letter-spacing:.24em;
-  font-size:.64rem;color:#344d3e;cursor:pointer;
-  background:rgba(255,250,240,.48);border:1px solid rgba(91,72,47,.38);
+  font-size:.64rem;color:var(--busta-cta);cursor:pointer;
+  background:rgba(255,250,240,.48);border:1px solid rgb(var(--seppia) / .38);
   border-radius:999px;padding:.85rem 1.8rem;white-space:nowrap;
-  backdrop-filter:blur(4px);box-shadow:0 3px 10px rgba(56,37,21,.1);
+  backdrop-filter:blur(4px);box-shadow:0 3px 10px rgb(var(--ombra) / .1);
   transition:opacity .5s ease, transform .5s ease, background .25s ease, border-color .25s ease;
 }
-.pill-apri:hover{background:rgba(255,255,255,.75);border-color:#9b7847}
-.pill-apri:focus-visible{outline:2px dashed var(--oro-chiaro);outline-offset:4px}
+.pill-apri:hover{background:rgba(255,255,255,.75);border-color:rgb(var(--filetto))}
+.pill-apri:focus-visible{outline:2px dashed var(--accento-testo);outline-offset:4px}
 
 @keyframes suCentro{from{opacity:0;transform:translate(-50%,14px)}}
 @keyframes suX{from{opacity:0;transform:translate(-50%,10px)}}
@@ -250,12 +279,12 @@ body.no-scroll{overflow:hidden;height:100svh}
 }
 
 @media (max-width:520px){
-  html:has(body.no-scroll){background-color:#e6d8c6}
-  .scena{background:#e6d8c6}
+  html:has(body.no-scroll){background-color:var(--carta-piena)}
+  .scena{background:var(--carta-piena)}
   .busta-full{
     width:100%;height:100%;min-height:0;
     border-radius:0;
-    box-shadow:inset 0 0 46px rgba(76,46,27,.12),inset 0 0 0 1px rgba(111,76,49,.22);
+    box-shadow:inset 0 0 46px rgb(var(--seppia) / .12),inset 0 0 0 1px rgb(var(--seppia) / .22);
   }
   .busta-intestazione{top:14%;font-size:.52rem;letter-spacing:.2em;gap:.55rem}
   .wax{width:clamp(90px,24vw,118px);height:clamp(90px,24vw,118px)}
@@ -288,9 +317,9 @@ body.no-scroll{overflow:hidden;height:100svh}
 .hero h1{
   font-family:var(--script);font-weight:400;
   font-size:clamp(3.6rem,17vw,6.4rem);
-  margin:.4rem 0 0;line-height:.95;color:var(--avorio);
+  margin:.4rem 0 0;line-height:.95;color:var(--testo);
 }
-.hero h1 em{display:block;font-style:normal;font-size:.42em;color:var(--oro-chiaro);margin:.1em 0}
+.hero h1 em{display:block;font-style:normal;font-size:.42em;color:var(--accento-testo);margin:.1em 0}
 .hero h1 span{display:inline-block;padding:0 .12em}
 .lead{margin:.4rem 0 1.6rem;font-size:1.15rem;opacity:.9;text-wrap:balance}
 @media (max-width:360px){.lead br{display:none}}
@@ -325,21 +354,21 @@ body.no-scroll{overflow:hidden;height:100svh}
 }
 .data-big{
   font-family:var(--titolo);letter-spacing:.14em;text-transform:uppercase;
-  font-size:.95rem;margin:0;color:var(--oro-chiaro);
+  font-size:.95rem;margin:0;color:var(--accento-testo);
 }
-.data-big small{font-size:.72em;letter-spacing:.2em;opacity:.75;color:var(--avorio)}
+.data-big small{font-size:.72em;letter-spacing:.2em;opacity:.75;color:var(--testo)}
 .posti{margin:1.4rem 0 0;font-size:.95rem;opacity:.8}
 .msg-personale{
   margin:1.1rem auto 0;max-width:30ch;font-style:italic;
-  font-size:1.05rem;opacity:.9;color:var(--avorio);
+  font-size:1.05rem;opacity:.9;color:var(--testo);
 }
-.scroll-cue{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);width:1px;height:44px;background:linear-gradient(var(--oro),transparent)}
-.scroll-cue span{position:absolute;top:0;left:-2px;width:5px;height:5px;border-radius:50%;background:var(--oro);animation:giu 2.2s ease-in-out infinite}
+.scroll-cue{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);width:1px;height:44px;background:linear-gradient(var(--accento),transparent)}
+.scroll-cue span{position:absolute;top:0;left:-2px;width:5px;height:5px;border-radius:50%;background:var(--accento);animation:giu 2.2s ease-in-out infinite}
 @keyframes giu{0%{transform:translateY(0);opacity:0}25%{opacity:1}100%{transform:translateY(40px);opacity:0}}
 
 .blocco{
   padding:3.2rem 0;text-align:center;
-  border-top:1px solid rgba(227,200,111,.16);
+  border-top:1px solid rgb(var(--accento-testo-rgb) / .16);
   opacity:0;transform:translateY(26px);
   transition:opacity .9s ease, transform .9s ease;
 }
@@ -352,12 +381,12 @@ body.no-scroll{overflow:hidden;height:100svh}
 .blocco.visto .luogo + .luogo{animation-delay:.45s}
 .titolo{
   font-family:var(--titolo);font-weight:500;text-transform:uppercase;
-  letter-spacing:.28em;font-size:.78rem;color:var(--oro-chiaro);
+  letter-spacing:.28em;font-size:.78rem;color:var(--accento-testo);
   margin:0 0 1.6rem;
 }
 .titolo::after{
   content:"";display:block;width:28px;height:1px;margin:.85rem auto 0;
-  background:var(--oro);transform:scaleX(0);
+  background:var(--accento);transform:scaleX(0);
   transition:transform 1.1s .35s cubic-bezier(.22,1,.36,1);
 }
 .visto .titolo::after{transform:scaleX(1)}
@@ -367,22 +396,22 @@ body.no-scroll{overflow:hidden;height:100svh}
 /* countdown */
 .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;max-width:20rem;margin-inline:auto}
 .cd-cella{min-width:0;overflow:hidden}
-.cd-num{display:block;font-family:var(--titolo);font-size:clamp(1.5rem,7vw,1.9rem);color:var(--avorio);line-height:1}
+.cd-num{display:block;font-family:var(--titolo);font-size:clamp(1.5rem,7vw,1.9rem);color:var(--testo);line-height:1}
 .cd-lab{font-family:var(--titolo);text-transform:uppercase;letter-spacing:.2em;font-size:.6rem;opacity:.6}
 
 /* luoghi */
 .luoghi{display:grid;gap:2.4rem}
 .luogo h4{font-family:var(--titolo);font-size:1rem;letter-spacing:.1em;margin:0 0 .3rem}
-.luogo .ora{color:var(--oro-chiaro);font-family:var(--titolo);letter-spacing:.2em;font-size:.75rem}
+.luogo .ora{color:var(--accento-testo);font-family:var(--titolo);letter-spacing:.2em;font-size:.75rem}
 .luogo .ind{opacity:.75;font-size:.95rem;margin:.2rem 0 .8rem}
 
 /* timeline */
 .timeline{list-style:none;margin:0;padding:0;display:grid;gap:1.5rem;max-width:22rem;margin-inline:auto;text-align:left}
 .timeline li{display:grid;grid-template-columns:4.2rem 1fr;gap:1rem;align-items:baseline;position:relative;padding-left:1.4rem}
-.timeline li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;transform:rotate(45deg);background:var(--oro)}
-.timeline li::after{content:"";position:absolute;left:3px;top:1.6em;bottom:-1.5rem;width:1px;background:rgba(227,200,111,.25)}
+.timeline li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;transform:rotate(45deg);background:var(--accento)}
+.timeline li::after{content:"";position:absolute;left:3px;top:1.6em;bottom:-1.5rem;width:1px;background:rgb(var(--accento-testo-rgb) / .25)}
 .timeline li:last-child::after{display:none}
-.tl-ora{font-family:var(--titolo);font-size:.8rem;letter-spacing:.12em;color:var(--oro-chiaro)}
+.tl-ora{font-family:var(--titolo);font-size:.8rem;letter-spacing:.12em;color:var(--accento-testo)}
 .tl-tit{display:block}
 .tl-nota{display:block;font-size:.85rem;opacity:.6}
 
@@ -390,8 +419,8 @@ body.no-scroll{overflow:hidden;height:100svh}
 .iban{margin:1.2rem 0 0;display:flex;flex-direction:column;align-items:center;gap:.7rem}
 .iban code{
   font-family:var(--titolo);letter-spacing:.08em;font-size:clamp(.72rem,3.3vw,.85rem);
-  background:rgba(255,255,255,.05);padding:.6rem .9rem;border-radius:3px;
-  border:1px solid rgba(227,200,111,.2);
+  background:rgb(var(--velo) / .05);padding:.6rem .9rem;border-radius:3px;
+  border:1px solid rgb(var(--accento-testo-rgb) / .2);
   max-width:100%;overflow-wrap:anywhere;
   -webkit-user-select:all;user-select:all;
 }
@@ -401,8 +430,8 @@ body.no-scroll{overflow:hidden;height:100svh}
 .btn{
   display:inline-block;text-decoration:none;cursor:pointer;
   font-family:var(--titolo);text-transform:uppercase;letter-spacing:.2em;font-size:.7rem;
-  padding:.95rem 1.7rem;border:1px solid var(--oro);border-radius:2px;
-  background:var(--oro);color:#14201a;
+  padding:.95rem 1.7rem;border:1px solid var(--accento);border-radius:2px;
+  background:var(--accento);color:var(--su-accento);
   transition:transform .25s ease, background .25s ease, color .25s ease;
   position:relative;overflow:hidden;
 }
@@ -415,11 +444,11 @@ body.no-scroll{overflow:hidden;height:100svh}
   animation:riflesso 5s 1.2s ease-in-out infinite;
 }
 @keyframes riflesso{0%{transform:translateX(-160%) skewX(-18deg)}28%,100%{transform:translateX(280%) skewX(-18deg)}}
-.btn-secondario{background:transparent;color:var(--oro-chiaro)}
+.btn-secondario{background:transparent;color:var(--accento-testo)}
 .btn-ghost{
-  background:none;border:0;cursor:pointer;color:var(--avorio);
+  background:none;border:0;cursor:pointer;color:var(--testo);
   font-family:var(--titolo);text-transform:uppercase;letter-spacing:.18em;font-size:.65rem;
-  opacity:.7;padding:.7rem .4rem;border-bottom:1px solid rgba(227,200,111,.35);
+  opacity:.7;padding:.7rem .4rem;border-bottom:1px solid rgb(var(--accento-testo-rgb) / .35);
   min-height:44px;display:inline-flex;align-items:center;justify-content:center;
 }
 .btn-ghost:active{opacity:1}
@@ -432,7 +461,7 @@ body.no-scroll{overflow:hidden;height:100svh}
 /* toast */
 .toast{
   position:fixed;left:50%;bottom:calc(2rem + env(safe-area-inset-bottom));transform:translate(-50%,160%);
-  background:var(--avorio);color:var(--testo);padding:.7rem 1.2rem;border-radius:3px;
+  background:var(--toast-fondo);color:var(--toast-testo);padding:.7rem 1.2rem;border-radius:3px;
   font-size:.9rem;z-index:80;transition:transform .4s cubic-bezier(.22,1,.36,1);
 }
 .toast.su{transform:translate(-50%,0)}
@@ -448,28 +477,163 @@ body.no-scroll{overflow:hidden;height:100svh}
 /* firma di chi ha realizzato l'invito — deve restare discreta */
 .credito{
   margin-top:4.5rem;padding-top:2rem;text-align:center;
-  border-top:1px solid rgba(227,200,111,.12);
+  border-top:1px solid rgb(var(--accento-testo-rgb) / .12);
   opacity:0;transform:translateY(18px);
   transition:opacity .9s ease, transform .9s ease;
 }
 .credito.visto{opacity:.55;transform:none}
 .credito:hover,.credito:focus-within{opacity:.9}
 .credito-testo{
-  margin:0 0 .9rem;font-size:.8rem;line-height:1.7;color:var(--avorio);
+  margin:0 0 .9rem;font-size:.8rem;line-height:1.7;color:var(--testo);
 }
 .credito-testo strong{
   display:inline-block;font-weight:400;
   font-family:var(--titolo);text-transform:uppercase;
-  letter-spacing:.22em;font-size:.72rem;color:var(--oro-chiaro);
+  letter-spacing:.22em;font-size:.72rem;color:var(--accento-testo);
   margin-top:.2rem;
 }
 .credito-link{display:flex;justify-content:center;gap:1.1rem}
 .credito-link a{
   display:grid;place-items:center;width:44px;height:44px;
-  border:1px solid rgba(227,200,111,.28);border-radius:50%;
-  color:var(--oro-chiaro);
+  border:1px solid rgb(var(--accento-testo-rgb) / .28);border-radius:50%;
+  color:var(--accento-testo);
   transition:background .25s ease, color .25s ease, transform .25s ease;
 }
-.credito-link a:hover{background:var(--oro);color:#14201a;transform:translateY(-2px)}
-.credito-link a:focus-visible{outline:2px solid var(--oro-chiaro);outline-offset:3px}
+.credito-link a:hover{background:var(--accento);color:var(--su-accento);transform:translateY(-2px)}
+.credito-link a:focus-visible{outline:2px solid var(--accento-testo);outline-offset:3px}
 .credito-link svg{width:16px;height:16px}
+
+/* =========================================================
+   TEMI — palette alternative (solo colori, stessa struttura)
+   Si attivano con W.tema in config.js oppure ?tema=nome nel link.
+   Ogni tema ridefinisce le variabili di :root e ha il suo sigillo
+   ricolorato in assets/sigilli/.
+   ========================================================= */
+
+/* Verde salvia + avorio — il verde e' il colore piu' scelto (Zola: 53% dei matrimoni 2026) */
+:root[data-tema="salvia"]{
+  --fondo:#f4f1ea; --fondo-alto:#fbf9f4; --fondo-basso:#e6e2d6;
+  --testo:#474a36;
+  --accento-rgb:107 127 94; --accento-testo-rgb:90 107 76; --su-accento:#fbfaf5;
+  --velo:0 0 0; --toast-fondo:#474a36; --toast-testo:#f4f1ea;
+  --scena-luce:rgba(206,205,190,.55); --scena-fondo:#7b7c6a; --scena-basso:#565841;
+  --carta-1:#f6f4ed; --carta-2:#d9dacb; --carta-piena:#e7e6dc;
+  --lembo-1:#fbfaf5; --lembo-2:#e1e1d4;
+  --seppia:86 88 65; --ombra:40 44 30; --filetto:123 124 106;
+  --busta-testo:#5f614b; --busta-nomi:#3d4a33; --busta-cta:#3d4a33;
+  --biglietto-1:#fffdf7; --biglietto-2:#eeebe0; --biglietto-testo:#3d4a33; --biglietto-kicker:#6b7059;
+  --sigillo:url("sigilli/salvia.webp");
+  --petali:107,127,94|154,154,141|201,176,110|190,200,170;
+}
+
+/* Blu polvere + navy — arioso e formale, il blu "qualcosa di blu" */
+:root[data-tema="blu-polvere"]{
+  --fondo:#eef1f4; --fondo-alto:#f8fafb; --fondo-basso:#dde3ea;
+  --testo:#1f3350;
+  --accento-rgb:95 116 137; --accento-testo-rgb:63 90 122; --su-accento:#ffffff;
+  --velo:0 0 0; --toast-fondo:#1f3350; --toast-testo:#eef1f4;
+  --scena-luce:rgba(215,219,223,.5); --scena-fondo:#7a8d9f; --scena-basso:#1f3350;
+  --carta-1:#f4f6f8; --carta-2:#d2d9e0; --carta-piena:#e3e8ed;
+  --lembo-1:#f9fafb; --lembo-2:#dae0e6;
+  --seppia:74 94 118; --ombra:26 40 62; --filetto:122 141 159;
+  --busta-testo:#4d6077; --busta-nomi:#1f3350; --busta-cta:#1f3350;
+  --biglietto-1:#ffffff; --biglietto-2:#edf0f3; --biglietto-testo:#1f3350; --biglietto-kicker:#5f7489;
+  --sigillo:url("sigilli/blu-polvere.webp");
+  --petali:170,183,195|122,141,159|255,255,255|200,210,222;
+}
+
+/* Bordeaux + cipria — romantico e serale, autunno/inverno */
+:root[data-tema="bordeaux"]{
+  --fondo:#3a1419; --fondo-alto:#56202a; --fondo-basso:#21090d;
+  --testo:#f8e9e3;
+  --accento-rgb:219 178 166; --accento-testo-rgb:244 209 195; --su-accento:#371016;
+  --velo:255 255 255; --toast-fondo:#f4d1c3; --toast-testo:#371016;
+  --scena-luce:rgba(102,43,46,.7);
+  --carta-1:#f7e6de; --carta-2:#e2c1b4; --carta-piena:#eed5ca;
+  --lembo-1:#fcefe9; --lembo-2:#e8cbbf;
+  --seppia:102 43 46; --ombra:55 16 22; --filetto:178 133 128;
+  --busta-testo:#7d4a4a; --busta-nomi:#4e2024; --busta-cta:#4e2024;
+  --biglietto-1:#fffaf7; --biglietto-2:#f3e2da; --biglietto-testo:#4e2024; --biglietto-kicker:#9b6b66;
+  --sigillo:url("sigilli/bordeaux.webp");
+  --petali:244,209,195|219,178,166|214,176,120|255,236,230;
+}
+
+/* Terracotta + sabbia — calore mediterraneo, perfetto per la costiera */
+:root[data-tema="terracotta"]{
+  --fondo:#f6eee4; --fondo-alto:#fcf7f0; --fondo-basso:#eadccb;
+  --testo:#3b2a20;
+  --accento-rgb:154 77 49; --accento-testo-rgb:154 77 49; --su-accento:#fff8f1;
+  --velo:0 0 0; --toast-fondo:#3b2a20; --toast-testo:#f6eee4;
+  --scena-luce:rgba(238,166,132,.45); --scena-fondo:#b46344; --scena-basso:#6e3824;
+  --carta-1:#f9eee3; --carta-2:#e8c9b1; --carta-piena:#f0dccb;
+  --lembo-1:#fdf5ec; --lembo-2:#ecd0bb;
+  --seppia:142 75 50; --ombra:70 34 18; --filetto:196 130 107;
+  --busta-testo:#8e4b32; --busta-nomi:#5a2e1c; --busta-cta:#5a2e1c;
+  --biglietto-1:#fffaf4; --biglietto-2:#f3e4d4; --biglietto-testo:#5a2e1c; --biglietto-kicker:#a8573a;
+  --sigillo:url("sigilli/terracotta.webp");
+  --petali:196,130,107|238,166,132|214,176,110|230,200,170;
+}
+
+/* Blu notte + argento — il ritorno dei metalli freddi, trend 2027 */
+:root[data-tema="blu-notte"]{
+  --fondo:#0e1726; --fondo-alto:#1c2a45; --fondo-basso:#060b15;
+  --testo:#eef1f6;
+  --accento-rgb:185 194 207; --accento-testo-rgb:213 219 228; --su-accento:#0e1726;
+  --velo:255 255 255; --toast-fondo:#eef1f6; --toast-testo:#0e1726;
+  --scena-luce:rgba(44,62,96,.7);
+  --carta-1:#f3f3f1; --carta-2:#d5d8db; --carta-piena:#e5e6e6;
+  --lembo-1:#f8f8f7; --lembo-2:#dcdfe1;
+  --seppia:70 78 92; --ombra:14 20 32; --filetto:140 148 160;
+  --busta-testo:#4f5868; --busta-nomi:#1a2740; --busta-cta:#1a2740;
+  --biglietto-1:#ffffff; --biglietto-2:#eceef0; --biglietto-testo:#1a2740; --biglietto-kicker:#6b7486;
+  --sigillo:url("sigilli/blu-notte.webp");
+  --petali:213,219,228|185,194,207|255,255,255|150,165,190;
+}
+
+/* Bianco Cloud Dancer + champagne — Pantone 2026, minimal e luminoso */
+:root[data-tema="champagne"]{
+  --fondo:#f2f0eb; --fondo-alto:#fbfaf7; --fondo-basso:#e6e1d7;
+  --testo:#3a3631;
+  --accento-rgb:179 147 100; --accento-testo-rgb:125 97 57; --su-accento:#2b2620;
+  --velo:0 0 0; --toast-fondo:#3a3631; --toast-testo:#f2f0eb;
+  --scena-luce:rgba(255,255,255,.35); --scena-fondo:#bdb3a2; --scena-basso:#8c8170;
+  --carta-1:#fcfbf8; --carta-2:#e6e1d7; --carta-piena:#f1eee8;
+  --lembo-1:#ffffff; --lembo-2:#ebe6dd;
+  --seppia:120 104 80; --ombra:60 50 36; --filetto:179 147 100;
+  --busta-testo:#7a6a52; --busta-nomi:#3a3631; --busta-cta:#3a3631;
+  --biglietto-1:#ffffff; --biglietto-2:#f3f0ea; --biglietto-testo:#3a3631; --biglietto-kicker:#7d6139;
+  --sigillo:url("sigilli/champagne.webp");
+  --petali:179,147,100|214,196,160|200,190,175|225,215,195;
+}
+
+/* Prugna + lilla — i toni "blackberry" e melanzana, il colore drammatico del 2027 */
+:root[data-tema="prugna"]{
+  --fondo:#2a1628; --fondo-alto:#42243f; --fondo-basso:#160a15;
+  --testo:#f5edf4;
+  --accento-rgb:201 179 217; --accento-testo-rgb:220 201 232; --su-accento:#2a1628;
+  --velo:255 255 255; --toast-fondo:#f5edf4; --toast-testo:#2a1628;
+  --scena-luce:rgba(92,50,90,.7);
+  --carta-1:#f4eff3; --carta-2:#dccfd9; --carta-piena:#e9e0e7;
+  --lembo-1:#f9f5f8; --lembo-2:#e3d7e0;
+  --seppia:92 60 88; --ombra:40 18 38; --filetto:150 120 146;
+  --busta-testo:#6e5068; --busta-nomi:#3f2240; --busta-cta:#3f2240;
+  --biglietto-1:#fffcfe; --biglietto-2:#efe6ec; --biglietto-testo:#3f2240; --biglietto-kicker:#85627e;
+  --sigillo:url("sigilli/prugna.webp");
+  --petali:220,201,232|201,179,217|244,209,195|255,245,252;
+}
+
+/* Verde oliva + giallo burro — tendenza italiana 2027, campagna e uliveti */
+:root[data-tema="oliva"]{
+  --fondo:#2c2f1c; --fondo-alto:#42462b; --fondo-basso:#191b0f;
+  --testo:#f6f0dc;
+  --accento-rgb:232 211 138; --accento-testo-rgb:240 222 156; --su-accento:#2c2f1c;
+  --velo:255 255 255; --toast-fondo:#f6f0dc; --toast-testo:#2c2f1c;
+  --scena-luce:rgba(86,88,50,.7);
+  --carta-1:#f9f2dd; --carta-2:#e7d9b0; --carta-piena:#f0e6c8;
+  --lembo-1:#fdf8e9; --lembo-2:#ecdfba;
+  --seppia:110 98 52; --ombra:50 44 20; --filetto:160 146 90;
+  --busta-testo:#6e6436; --busta-nomi:#3e4228; --busta-cta:#3e4228;
+  --biglietto-1:#fffcf0; --biglietto-2:#f4ead0; --biglietto-testo:#3e4228; --biglietto-kicker:#8a7c45;
+  --sigillo:url("sigilli/oliva.webp");
+  --petali:240,222,156|232,211,138|200,205,150|255,252,235;
+}

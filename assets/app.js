@@ -224,7 +224,10 @@
   testo("#letterNomi", `${W.sposo} & ${W.sposa}`);
 
   const metaTema = $('meta[name="theme-color"]');
-  const VERDE = "#0f1a17", CARTA = "#e6d8c6";
+  // Colori della palette attiva (definiti in style.css, sezione TEMI)
+  const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const VERDE = cssVar("--fondo") || "#0f1a17", CARTA = cssVar("--carta-piena") || "#e6d8c6";
+  if (metaTema && !window.matchMedia("(max-width:520px)").matches) metaTema.content = VERDE;
   // Su telefono la busta riempie lo schermo: la barra del browser prende il colore della carta.
   if (metaTema && window.matchMedia("(max-width:520px)").matches) metaTema.content = CARTA;
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -329,7 +332,7 @@
     ridimensiona();
     window.addEventListener("resize", ridimensiona);
 
-    const colori = ["227,200,111", "227,200,111", "201,162,39", "245,240,230"];
+    const colori = (cssVar("--petali") || "227,200,111|201,162,39").split("|").map((t) => t.trim());
     const nuovo = (pioggia) => {
       const base = (.25 + Math.random() * .55) * dpr;
       return {

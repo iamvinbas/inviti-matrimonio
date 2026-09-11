@@ -3,6 +3,19 @@
    Modifica SOLO questo file per aggiornare data, luoghi, ecc.
    ============================================================ */
 window.WEDDING = {
+  /* Palette colori. Valori possibili:
+     "verde-oro"   verde notte + oro (originale)
+     "salvia"      verde salvia + avorio
+     "blu-polvere" blu polvere + navy
+     "bordeaux"    bordeaux + cipria
+     "terracotta"  terracotta + sabbia
+     "blu-notte"   blu notte + argento
+     "champagne"   bianco Cloud Dancer + champagne
+     "prugna"      prugna + lilla
+     "oliva"       verde oliva + giallo burro
+     Per provarle senza toccare questo file: aggiungi ?tema=nome al link. */
+  tema: "verde-oro",
+
   sposa: "Tiziana",
   sposo: "Gaetano",
   // Data/ora inizio cerimonia in formato ISO (fuso Italia)
