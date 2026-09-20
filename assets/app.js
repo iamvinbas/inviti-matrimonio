@@ -8,12 +8,22 @@
   const riduci = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const audioCanzone = W.canzone && W.canzone.audio ? new Audio(W.canzone.audio) : null;
   const inizioAudio = W.canzone ? Math.max(0, Number(W.canzone.inizio) || 0) : 0;
+  let impostaInizioAudio = () => {};
   if (audioCanzone) {
     // Loop manuale: l'elemento audio nativo ripartirebbe da 0 invece che dall'offset scelto.
     audioCanzone.loop = false;
     audioCanzone.preload = "auto";
+    impostaInizioAudio = () => {
+      if (audioCanzone.readyState < 1) return;
+      const fine = Number.isFinite(audioCanzone.duration)
+        ? Math.max(0, audioCanzone.duration - 0.05)
+        : inizioAudio;
+      audioCanzone.currentTime = Math.min(inizioAudio, fine);
+    };
+    audioCanzone.addEventListener("loadedmetadata", impostaInizioAudio);
+    audioCanzone.load();
     audioCanzone.addEventListener("ended", () => {
-      audioCanzone.currentTime = inizioAudio;
+      impostaInizioAudio();
       audioCanzone.play().catch(() => {});
     });
   }
@@ -74,14 +84,6 @@
     ? `Vi preghiamo di confermare la vostra presenza entro il ${W.rsvpEntro}.`
     : "Vi preghiamo di confermare la vostra presenza.";
   testo("#rsvpIstruzioni", rsvpIstruzioni);
-
-  if (W.canzone && W.canzone.titolo && W.canzone.artista && W.canzone.link) {
-    const musica = $("#musica");
-    const linkMusica = $("#musicaLink");
-    musica.hidden = false;
-    linkMusica.href = W.canzone.link;
-    linkMusica.textContent = `${W.canzone.titolo} · ${W.canzone.artista}`;
-  }
 
   if (W.fotoBrindisi) {
     const foto = $("#fotoBrindisi");
@@ -299,7 +301,7 @@
     if (aperto) return;
     aperto = true;
     if (audioCanzone) {
-      audioCanzone.currentTime = inizioAudio;
+      impostaInizioAudio();
       audioCanzone.play().catch(() => {});
     }
     scena.classList.add("pronta");
