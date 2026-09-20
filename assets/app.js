@@ -153,16 +153,20 @@
 
   /* ---------- 3. RSVP via WhatsApp ---------- */
   const chi = ospite.nomi || "";
-  const rsvp = (risposta) => {
+  const rsvp = (risposta, richiedeDettagli = false) => {
+    const dettagli = richiedeDettagli
+      ? (ospite.posti > 0
+        ? `\nNumero partecipanti: ___ / ${ospite.posti}`
+        : "\nNumero partecipanti: ___") +
+        "\nAllergie/intolleranze: ___"
+      : "";
     const txt =
       `Ciao! Rispondo alla partecipazione di ${W.sposo} e ${W.sposa}.\n` +
       (chi ? `Sono: ${chi}\n` : "") +
-      `Risposta: ${risposta}` +
-      (ospite.posti > 0 ? `\nNumero partecipanti: ___ / ${ospite.posti}` : "\nNumero partecipanti: ___") +
-      "\nAllergie/intolleranze: ___";
+      `Risposta: ${risposta}` + dettagli;
     return `https://wa.me/${W.rsvpWhatsApp}?text=${encodeURIComponent(txt)}`;
   };
-  $("#btnSi").href = rsvp("CI SARÒ ✅");
+  $("#btnSi").href = rsvp("CI SARÒ ✅", true);
   $("#btnNo").href = rsvp("Purtroppo non potrò esserci");
   $("#btnSi").target = $("#btnNo").target = "_blank";
   $("#btnSi").rel = $("#btnNo").rel = "noopener";

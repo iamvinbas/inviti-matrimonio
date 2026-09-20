@@ -64,7 +64,7 @@ window.WEDDING = {
   // Lista nozze / IBAN (opzionale: metti "" per nascondere la sezione)
   regalo: {
     testo:
-      "La vostra presenza è il regalo più prezioso. Se desiderate festeggiarci ulteriormente, un contributo per il nostro futuro sarà molto apprezzato.",
+      "La vostra presenza sarà per noi il dono più prezioso. Se desiderate accompagnarci anche con un pensiero, un contributo per il nostro futuro sarà accolto con grande gratitudine.",
     iban: "IT000000000",
     causale: "Matrimonio Gaetano Tiziana",
     intestatario: "Gaetano e Tiziana",
