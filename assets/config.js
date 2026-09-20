@@ -58,7 +58,7 @@ window.WEDDING = {
   // RSVP: numero WhatsApp in formato internazionale SENZA + e senza spazi
   // Vuoto = WhatsApp si apre senza destinatario (sicuro per la bozza).
   // Metti qui il numero vero prima di inviare gli inviti: prefisso senza + ne spazi, es. "393401234567"
-  rsvpWhatsApp: "",
+  rsvpWhatsApp: "393408213056",
   rsvpEntro: "",
 
   // Lista nozze / IBAN (opzionale: metti "" per nascondere la sezione)
