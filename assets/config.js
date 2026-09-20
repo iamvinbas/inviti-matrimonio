@@ -14,44 +14,43 @@ window.WEDDING = {
      "prugna"      prugna + lilla
      "oliva"       verde oliva + giallo burro
      Per provarle senza toccare questo file: aggiungi ?tema=nome al link. */
-  tema: "verde-oro",
+  tema: "oliva",
 
   sposa: "Tiziana",
   sposo: "Gaetano",
   // Data/ora inizio cerimonia in formato ISO (fuso Italia)
-  dataISO: "2027-06-12T16:30:00+02:00",
-  dataTesto: "Sabato 12 Giugno 2027",
+  dataISO: "2027-07-02T16:30:00+02:00",
+  dataTesto: "Venerdì 2 luglio 2027",
   oraTesto: "ore 16:30",
-  dataBreve: "12 · 06 · 2027", // mostrata sul biglietto dentro la busta
+  dataBreve: "02 · 07 · 2027", // mostrata sul biglietto dentro la busta
 
   cerimonia: {
-    titolo: "La Cerimonia",
+    titolo: "La cerimonia",
     ora: "16:30",
-    luogo: "Chiesa di Santa Maria Assunta",
-    indirizzo: "Piazza del Duomo 1, Napoli",
-    maps: "https://maps.google.com/?q=Chiesa+di+Santa+Maria+Assunta+Napoli",
+    luogo: "Duomo S. Corrado",
+    indirizzo: "Via Chiesa Vecchia, 70056 Molfetta (BA)",
+    maps: "https://www.google.com/maps/search/?api=1&query=Duomo+San+Corrado%2C+Via+Chiesa+Vecchia%2C+Molfetta",
   },
   ricevimento: {
-    titolo: "Il Ricevimento",
+    titolo: "Il ricevimento",
     ora: "18:30",
-    luogo: "Villa Bellavista",
-    indirizzo: "Via Panoramica 22, Sorrento",
-    maps: "https://maps.google.com/?q=Villa+Bellavista+Sorrento",
+    luogo: "Villa Ciardi",
+    indirizzo: "Via Sant'Andrea 210/208/206, 76011 Bisceglie (BT)",
+    maps: "https://www.google.com/maps/search/?api=1&query=Villa+Ciardi%2C+Via+Sant%27Andrea+210%2F208%2F206%2C+Bisceglie",
   },
 
   programma: [
     {
       ora: "16:30",
       titolo: "Cerimonia",
-      nota: "Chiesa di Santa Maria Assunta",
+      nota: "Duomo S. Corrado",
     },
     {
       ora: "18:30",
-      titolo: "Aperitivo di benvenuto",
-      nota: "Giardino di Villa Bellavista",
+      titolo: "Ricevimento",
+      nota: "Villa Ciardi",
     },
-    { ora: "20:00", titolo: "Cena", nota: "Sala degli Ulivi" },
-    { ora: "23:00", titolo: "Taglio della torta e festa", nota: "Terrazza" },
+    { ora: "20:00", titolo: "Cena", nota: "Villa Ciardi" },
   ],
 
   dressCode: "Elegante — formale",
@@ -60,15 +59,33 @@ window.WEDDING = {
   // Vuoto = WhatsApp si apre senza destinatario (sicuro per la bozza).
   // Metti qui il numero vero prima di inviare gli inviti: prefisso senza + ne spazi, es. "393401234567"
   rsvpWhatsApp: "",
-  rsvpEntro: "30 Aprile 2027",
+  rsvpEntro: "",
 
   // Lista nozze / IBAN (opzionale: metti "" per nascondere la sezione)
   regalo: {
     testo:
-      "Il vostro affetto è il regalo più grande. Se desiderate contribuire al nostro viaggio di nozze:",
-    iban: "IT00 X000 0000 0000 0000 0000 000",
+      "La vostra presenza è il regalo più prezioso. Se desiderate festeggiarci ulteriormente, un contributo per il nostro futuro sarà molto apprezzato.",
+    iban: "IT000000000",
+    causale: "Matrimonio Gaetano Tiziana",
     intestatario: "Gaetano e Tiziana",
+    listaViaggi: {
+      nome: "Roilen Viaggi",
+      indirizzo: "Piazza Vittorio Emanuele, 6, 70056 Molfetta (BA)",
+      link: "",
+      maps: "https://www.google.com/maps/search/?api=1&query=Roilen+Viaggi%2C+Piazza+Vittorio+Emanuele+6%2C+Molfetta",
+    },
   },
+
+  canzone: {
+    titolo: "Young and Beautiful",
+    artista: "Lana Del Rey",
+    link: "https://open.spotify.com/track/2nMeu6UenVvwUktBCpLMK9",
+    // Inserire qui il percorso di un file audio ottenuto legalmente.
+    audio: "assets/Lana Del Rey - Young and Beautiful_320k.mp3",
+    inizio: 13,
+  },
+  // Percorso relativo della foto del brindisi, da inserire quando sarà disponibile.
+  fotoBrindisi: "",
 
   hashtag: "#Gaetano&Tiziana2027",
 

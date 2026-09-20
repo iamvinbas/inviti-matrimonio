@@ -6,6 +6,17 @@
   const W = window.WEDDING;
   const $ = (s) => document.querySelector(s);
   const riduci = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const audioCanzone = W.canzone && W.canzone.audio ? new Audio(W.canzone.audio) : null;
+  const inizioAudio = W.canzone ? Math.max(0, Number(W.canzone.inizio) || 0) : 0;
+  if (audioCanzone) {
+    // Loop manuale: l'elemento audio nativo ripartirebbe da 0 invece che dall'offset scelto.
+    audioCanzone.loop = false;
+    audioCanzone.preload = "auto";
+    audioCanzone.addEventListener("ended", () => {
+      audioCanzone.currentTime = inizioAudio;
+      audioCanzone.play().catch(() => {});
+    });
+  }
 
   /* ---------- 1. Chi sta guardando l'invito ----------
      I dati dell'invitato NON stanno sul sito: viaggiano dentro il link,
@@ -55,7 +66,31 @@
   // testo("#dressCode", W.dressCode);
   testo("#rsvpEntro", W.rsvpEntro);
   testo("#hashtag", W.hashtag || "");
-  document.title = ospite.nomi ? `${ospite.nomi} — Partecipazione di Nozze` : "Partecipazione di Nozze";
+  document.title = ospite.nomi
+    ? `${ospite.nomi} — Partecipazione di nozze`
+    : `${W.sposo} & ${W.sposa} — Partecipazione di nozze`;
+
+  const rsvpIstruzioni = W.rsvpEntro
+    ? `Vi preghiamo di confermare la vostra presenza entro il ${W.rsvpEntro}.`
+    : "Vi preghiamo di confermare la vostra presenza.";
+  testo("#rsvpIstruzioni", rsvpIstruzioni);
+
+  if (W.canzone && W.canzone.titolo && W.canzone.artista && W.canzone.link) {
+    const musica = $("#musica");
+    const linkMusica = $("#musicaLink");
+    musica.hidden = false;
+    linkMusica.href = W.canzone.link;
+    linkMusica.textContent = `${W.canzone.titolo} · ${W.canzone.artista}`;
+  }
+
+  if (W.fotoBrindisi) {
+    const foto = $("#fotoBrindisi");
+    const img = document.createElement("img");
+    img.src = W.fotoBrindisi;
+    img.alt = "Il brindisi degli sposi";
+    foto.appendChild(img);
+    foto.hidden = false;
+  }
 
   if (ospite.posti > 0) {
     const p = $("#posti");
@@ -90,6 +125,26 @@
     testo("#regaloTesto", W.regalo.testo);
     testo("#regaloIban", W.regalo.iban);
     testo("#regaloIntestatario", W.regalo.intestatario);
+    testo("#regaloCausale", W.regalo.causale ? `Causale: ${W.regalo.causale}` : "");
+    if (W.regalo.listaViaggi && W.regalo.listaViaggi.nome) {
+      testo("#listaViaggiNome", W.regalo.listaViaggi.nome);
+      const lista = $("#listaViaggi");
+      const linkLista = $("#listaViaggiLink");
+      lista.hidden = false;
+      if (W.regalo.listaViaggi.link || W.regalo.listaViaggi.maps) {
+        linkLista.href = W.regalo.listaViaggi.link || W.regalo.listaViaggi.maps;
+        linkLista.textContent = W.regalo.listaViaggi.link
+          ? "Apri il link della lista viaggi"
+          : "Apri in mappe";
+      } else {
+        linkLista.remove();
+      }
+      if (W.regalo.listaViaggi.indirizzo) {
+        const indirizzo = document.createElement("span");
+        indirizzo.textContent = ` · ${W.regalo.listaViaggi.indirizzo}`;
+        $("#listaViaggiNome").appendChild(indirizzo);
+      }
+    }
   } else {
     $("#regaloBox").remove();
   }
@@ -101,7 +156,8 @@
       `Ciao! Rispondo alla partecipazione di ${W.sposo} e ${W.sposa}.\n` +
       (chi ? `Sono: ${chi}\n` : "") +
       `Risposta: ${risposta}` +
-      (ospite.posti > 1 ? `\nPersone: ___ / ${ospite.posti}` : "");
+      (ospite.posti > 0 ? `\nNumero partecipanti: ___ / ${ospite.posti}` : "\nNumero partecipanti: ___") +
+      "\nAllergie/intolleranze: ___";
     return `https://wa.me/${W.rsvpWhatsApp}?text=${encodeURIComponent(txt)}`;
   };
   $("#btnSi").href = rsvp("CI SARÒ ✅");
@@ -242,6 +298,10 @@
   function apri() {
     if (aperto) return;
     aperto = true;
+    if (audioCanzone) {
+      audioCanzone.currentTime = inizioAudio;
+      audioCanzone.play().catch(() => {});
+    }
     scena.classList.add("pronta");
     const k = riduci ? 0.3 : 1;          // con "riduci movimento" la sequenza e' molto piu' breve
     const dopo = (ms, fn) => setTimeout(fn, ms * k);

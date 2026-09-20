@@ -6,10 +6,10 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>Partecipazione di Nozze</title>
+    <title>Gaetano &amp; Tiziana — Partecipazione di nozze</title>
     <meta
       name="description"
-      content="Siamo felici di invitarti al nostro matrimonio."
+      content="Gaetano e Tiziana ti invitano a condividere il loro giorno speciale."
     />
     <meta name="theme-color" content="#0f1a17" />
 
@@ -18,7 +18,7 @@
 
     <!-- Anteprima su WhatsApp / social -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Ti invitiamo al nostro matrimonio" />
+    <meta property="og:title" content="Gaetano &amp; Tiziana — Partecipazione di nozze" />
     <meta
       property="og:description"
       content="Tira il fiocco per aprire la partecipazione."
@@ -35,10 +35,10 @@
       rel="stylesheet"
     />
     <!-- Dopo ogni modifica a css/js: alza ?v= di 1 per bypassare la cache (GitHub Pages usa max-age=600) -->
-    <link rel="stylesheet" href="assets/style.css?v=27" />
+    <link rel="stylesheet" href="assets/style.css?v=34" />
 
     <!-- Dati del matrimonio: servono gia' qui per scegliere la palette prima del primo disegno -->
-    <script src="assets/config.js?v=27"></script>
+    <script src="assets/config.js?v=34"></script>
     <script>
       /* Palette colori: ?tema=nome nel link (per provarle) oppure W.tema in config.js.
          Anticipa anche il download del sigillo del colore giusto. */
@@ -66,7 +66,7 @@
           <p class="letter-kicker">Il nostro giorno</p>
           <p class="script letter-nomi" id="letterNomi">Gaetano &amp; Tiziana</p>
           <span class="letter-rule" aria-hidden="true"></span>
-          <p class="letter-data" id="letterData">12 · 06 · 2027</p>
+          <p class="letter-data" id="letterData">02 · 07 · 2027</p>
         </div>
 
         <!-- Lembo e cera sono un unico gruppo: ruotano insieme verso l'alto. -->
@@ -78,7 +78,7 @@
         <div class="busta-intestazione" aria-hidden="true">
           <span>Invito di nozze</span>
           <i></i>
-          <span id="bustaData">12 · 06 · 2027</span>
+          <span id="bustaData">02 · 07 · 2027</span>
         </div>
 
         <p class="script busta-nomi" id="bustaNomi">Gaetano &amp; Tiziana</p>
@@ -100,13 +100,17 @@
           vi invitano a condividere con loro <br />il giorno del loro matrimonio
         </p>
         <p class="data-big">
-          <span id="dataTesto">Sabato 12 Giugno 2027</span><br /><small
+          <span id="dataTesto">Venerdì 2 luglio 2027</span><br /><small
             id="oraTesto"
             >ore 16:30</small
           >
         </p>
         <p class="posti" id="posti" hidden></p>
         <p class="msg-personale" id="msgPersonale" hidden></p>
+        <p class="musica" id="musica" hidden>
+          <span class="musica-etichetta">La nostra canzone</span>
+          <a id="musicaLink" href="#" target="_blank" rel="noopener">Ascolta</a>
+        </p>
         <div class="scroll-cue" aria-hidden="true"><span></span></div>
       </header>
 
@@ -126,6 +130,13 @@
           <article class="luogo" id="luogoCerimonia"></article>
           <article class="luogo" id="luogoRicevimento"></article>
         </div>
+      </section>
+
+      <section class="blocco reveal attesa">
+        <h3 class="titolo">Vi aspettiamo</h3>
+        <p class="testo">Saremo felici di avervi con noi nel nostro giorno speciale.</p>
+        <!-- Inserire qui la foto del brindisi quando sarà disponibile. -->
+        <figure class="foto-brindisi" id="fotoBrindisi" hidden></figure>
       </section>
 
       <!-- Sospeso su richiesta: sezione "Il programma" (orari dettagliati).
@@ -154,13 +165,17 @@
           </button>
         </p>
         <p class="testo piccolo" id="regaloIntestatario"></p>
+        <p class="testo piccolo" id="regaloCausale"></p>
+        <div class="lista-viaggi" id="listaViaggi" hidden>
+          <p class="testo piccolo">Lista viaggi: <strong id="listaViaggiNome"></strong></p>
+          <a class="btn-ghost" id="listaViaggiLink" href="#" target="_blank" rel="noopener">Apri in mappe</a>
+        </div>
       </section>
 
       <section class="blocco reveal rsvp">
         <h3 class="titolo">Confermi la tua presenza?</h3>
-        <p class="testo">
-          Facci sapere entro il <strong id="rsvpEntro"></strong>.
-        </p>
+        <p class="testo" id="rsvpIstruzioni"></p>
+        <p class="testo piccolo">Nel messaggio indica il numero dei partecipanti e le eventuali allergie o intolleranze.</p>
         <div class="azioni">
           <a class="btn" id="btnSi" href="#">Ci sarò</a>
           <a class="btn btn-secondario" id="btnNo" href="#"
@@ -183,6 +198,6 @@
       <aside class="credito reveal" id="credito" hidden></aside>
     </main>
 
-    <script src="assets/app.js?v=27"></script>
+    <script src="assets/app.js?v=34"></script>
   </body>
 </html>

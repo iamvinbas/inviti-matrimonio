@@ -362,6 +362,16 @@ body.no-scroll{overflow:hidden;height:100svh}
   margin:1.1rem auto 0;max-width:30ch;font-style:italic;
   font-size:1.05rem;opacity:.9;color:var(--testo);
 }
+.musica{
+  display:flex;flex-direction:column;align-items:center;gap:.35rem;
+  margin:1.45rem 0 0;font-size:.88rem;line-height:1.35;
+}
+.musica-etichetta{
+  font-family:var(--titolo);text-transform:uppercase;letter-spacing:.2em;
+  font-size:.56rem;color:var(--accento-testo);opacity:.8;
+}
+.musica a{color:var(--testo);text-decoration:none;border-bottom:1px solid rgb(var(--accento-testo-rgb) / .45);padding:.15rem .2rem}
+.musica a:hover{color:var(--accento-testo)}
 .scroll-cue{position:absolute;bottom:2.2rem;left:50%;transform:translateX(-50%);width:1px;height:44px;background:linear-gradient(var(--accento),transparent)}
 .scroll-cue span{position:absolute;top:0;left:-2px;width:5px;height:5px;border-radius:50%;background:var(--accento);animation:giu 2.2s ease-in-out infinite}
 @keyframes giu{0%{transform:translateY(0);opacity:0}25%{opacity:1}100%{transform:translateY(40px);opacity:0}}
@@ -424,6 +434,10 @@ body.no-scroll{overflow:hidden;height:100svh}
   max-width:100%;overflow-wrap:anywhere;
   -webkit-user-select:all;user-select:all;
 }
+.lista-viaggi{margin-top:1.2rem}
+.lista-viaggi strong{font-weight:400;color:var(--accento-testo)}
+.foto-brindisi{margin:1.8rem auto 0;max-width:34rem;border:1px solid rgb(var(--accento-testo-rgb) / .2);padding:.35rem}
+.foto-brindisi img{display:block;width:100%;height:auto;max-height:26rem;object-fit:cover}
 
 /* bottoni */
 .azioni{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-top:1.4rem}
