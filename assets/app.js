@@ -309,29 +309,31 @@
       audioCanzone.play().catch(() => {});
     }
     scena.classList.add("pronta");
+    // L'invito si prepara subito sotto la busta (invisibile e coperto): il suo
+    // layout pesa adesso, non durante la dissolvenza finale.
+    window.scrollTo(0, 0);
+    invito.hidden = false;
     const k = riduci ? 0.3 : 1;          // con "riduci movimento" la sequenza e' molto piu' breve
     const dopo = (ms, fn) => setTimeout(fn, ms * k);
 
     // 1. il sigillo si schiaccia sotto il dito (e su Android una vibrazione leggera)
     sigillo.classList.add("premuto");
     if (navigator.vibrate) navigator.vibrate(12);
-    // 2. lembo e cera salgono insieme verso l'alto
-    dopo(160, () => { sigillo.classList.remove("premuto"); scena.classList.add("apri_busta"); });
-    // 3. il biglietto esce dalla tasca e resta visibile un attimo
-    dopo(1000, () => scena.classList.add("biglietto_esce"));
-    // 4. la busta si dissolve e sotto, gia' al suo posto, compare l'invito (niente salti)
-    dopo(2700, () => {
-      window.scrollTo(0, 0);
-      invito.hidden = false;
-      document.body.classList.remove("no-scroll");
-      if (metaTema) metaTema.content = VERDE;
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        invito.classList.add("dentro");
-        scena.classList.add("via");
-      }));
+    // 2. al rilascio parte la coreografia di style.css, tutta su una sola classe:
+    //    testi via (0-0,4 s), lembo visibile (0-0,6 s), biglietto che sale (da 0,36 s)
+    dopo(120, () => { sigillo.classList.remove("premuto"); scena.classList.add("apri_busta"); });
+    // 3. il biglietto resta un attimo da leggere, poi la busta si dissolve sull'invito
+    dopo(2000, () => {
+      invito.classList.add("dentro");
+      scena.classList.add("via");
       petali();
     });
-    dopo(3800, () => { scena.style.display = "none"; });
+    // 4. a meta' dissolvenza le barre del browser passano dal colore carta al verde
+    dopo(2350, () => {
+      document.body.classList.remove("no-scroll");
+      if (metaTema) metaTema.content = VERDE;
+    });
+    dopo(2800, () => { scena.style.display = "none"; });
   }
 
   document.body.classList.add("no-scroll");

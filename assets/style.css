@@ -41,6 +41,12 @@
   /* petali (letti da app.js): colori r,g,b separati da | */
   --petali:227,200,111|227,200,111|201,162,39|245,240,230;
 
+  /* --- movimento: poche curve, sempre le stesse --- */
+  --ease-out:cubic-bezier(.22,1,.36,1);       /* entrate: partono decise e si posano piano */
+  --ease-out-lungo:cubic-bezier(.16,1,.3,1);  /* oggetti che scivolano a lungo (biglietto) */
+  --ease-in:cubic-bezier(.55,0,1,.45);        /* uscite: partono piano e spariscono in fretta */
+  --ease-molla:cubic-bezier(.34,1.56,.64,1);  /* piccolo rimbalzo (sigillo rilasciato) */
+
   --serif:"Cormorant Garamond", Georgia, serif;
   --titolo:"Cinzel", Georgia, serif;
   --script:"Pinyon Script", "Snell Roundhand", cursive;
@@ -107,10 +113,12 @@ body.no-scroll{overflow:hidden;height:100svh}
     radial-gradient(ellipse at 50% 42%,var(--scena-luce) 0%,transparent 47%),
     radial-gradient(ellipse at 50% 100%,var(--scena-basso) 0%,var(--scena-fondo) 70%);
   perspective:1400px;
-  transition:opacity .9s ease, transform .9s ease;
+  /* dissolvenza lenta ai lati e rapida al centro: le tinte grigie a meta' strada
+     tra carta e verde durano un attimo */
+  transition:opacity .7s cubic-bezier(.65,0,.35,1);
 }
 .scena.via{opacity:0;pointer-events:none}
-.scena.via .busta-full{transform:translate(-50%,-50%) scale(1.07)}
+.scena.via .busta-full{transform:translate(-50%,-50%) scale(1.06)}
 
 /* La busta è un oggetto centrato: ombra, bordo e luce la fanno sembrare
    appoggiata davanti all'utente invece che stampata sullo sfondo. */
@@ -127,16 +135,21 @@ body.no-scroll{overflow:hidden;height:100svh}
   background:var(--busta-sfondo);
   border:1px solid rgb(var(--seppia) / .24);border-radius:4px 4px 7px 7px;
   box-shadow:0 34px 70px rgba(0,0,0,.45),0 8px 16px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.75);
-  transition:transform 1s cubic-bezier(.22,1,.36,1);
+  /* overflow:hidden appiattisce il 3D dei figli: la prospettiva va data qui,
+     altrimenti il lembo non si solleva ma si schiaccia come un foglio stampato. */
+  perspective:1100px;
+  transition:transform 1.2s var(--ease-out);
 }
 .busta-full::before{
   content:"";position:absolute;inset:0;z-index:6;pointer-events:none;
   background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.30) 50%,transparent 62%);
   transform:translateX(-110%);
   animation:luceCarta 7s 2.6s ease-in-out infinite;
+  transition:opacity .3s ease;
 }
 @keyframes luceCarta{0%{transform:translateX(-110%)}32%,100%{transform:translateX(110%)}}
-.scena.apri_busta .busta-full::before{animation:none;opacity:0}
+/* il riflesso si ferma dov'e' e svanisce, invece di sparire di colpo */
+.scena.apri_busta .busta-full::before{animation-play-state:paused;opacity:0}
 .busta-full::after{
   content:"";position:absolute;inset:12px;z-index:0;pointer-events:none;
   border:1px solid rgb(var(--seppia) / .32);border-radius:2px;
@@ -151,8 +164,8 @@ body.no-scroll{overflow:hidden;height:100svh}
   color:var(--biglietto-testo);background:linear-gradient(145deg,var(--biglietto-1),var(--biglietto-2));
   border:1px solid rgb(var(--seppia) / .3);
   box-shadow:0 16px 30px rgb(var(--ombra) / .2),inset 0 0 22px rgb(var(--seppia) / .08);
-  transform:translate(-50%,110%) rotate(-1.2deg);opacity:0;
-  transition:transform .95s cubic-bezier(.16,1,.3,1),opacity .45s ease;
+  transform:translate(-50%,110%) rotate(-3deg) scale(.97);opacity:0;
+  will-change:transform,opacity;   /* gia' su un suo livello: il primo fotogramma non scatta */
   pointer-events:none;
 }
 .busta-letter::before,.busta-letter::after{
@@ -166,8 +179,15 @@ body.no-scroll{overflow:hidden;height:100svh}
 }
 .letter-nomi{margin:1rem 0 .8rem;font-size:clamp(2rem,8vw,3.4rem);line-height:.95}
 .letter-rule{width:2.2rem;height:1px;background:rgb(var(--filetto));margin-bottom:.8rem}
-.scena.biglietto_esce .busta-letter{
-  transform:translate(-50%,0) rotate(-1.2deg);opacity:1;
+/* Parte mentre il lembo sta ancora sparendo (niente busta vuota in mezzo):
+   sale, si raddrizza e si posa con una frenata lunga, che continua piano
+   anche mentre lo si legge, cosi' la scena non resta mai ferma. */
+@keyframes bigliettoEsce{to{transform:translate(-50%,0) rotate(-1.2deg) scale(1)}}
+@keyframes bigliettoAppare{to{opacity:1}}
+.scena.apri_busta .busta-letter{
+  animation:
+    bigliettoEsce 1.7s .36s var(--ease-out-lungo) forwards,
+    bigliettoAppare .35s .36s ease-out forwards;
 }
 
 /* Lembo e cera condividono la stessa cerniera, come in una busta reale: la
@@ -177,6 +197,7 @@ body.no-scroll{overflow:hidden;height:100svh}
 .busta-flap-wrap{
   position:absolute;left:0;top:0;width:100%;height:44%;z-index:4;
   transform-origin:50% 0%;transform-style:preserve-3d;
+  will-change:transform;
   pointer-events:none;
 }
 .busta-flap{
@@ -189,18 +210,24 @@ body.no-scroll{overflow:hidden;height:100svh}
 }
 .busta-flap::after{
   content:"";position:absolute;inset:0;opacity:0;
-  background:linear-gradient(180deg,rgb(var(--ombra) / .05),rgb(var(--ombra) / .22));
+  background:linear-gradient(180deg,rgb(var(--ombra) / .1),rgb(var(--ombra) / .4));
 }
+/* La punta col sigillo si stacca piano, viene verso chi guarda e sparisce
+   oltre il bordo ancora in velocita'. Oltre i 90 gradi il lembo e' fuori
+   dalla busta (invisibile), quindi la parte visibile ha piu' di mezzo secondo
+   tutta per se' e il resto della rotazione corre lineare. L'ombra cresce in
+   sincrono, man mano che la carta si gira dalla luce. */
 @keyframes apriLembo{
-  0%{transform:rotateX(0deg)}
-  55%{transform:rotateX(100deg)}
-  100%{transform:rotateX(184deg)}
+  0%{transform:rotateX(0deg);animation-timing-function:cubic-bezier(.45,0,.75,.55)}
+  55%{transform:rotateX(95deg);animation-timing-function:linear}
+  100%{transform:rotateX(180deg)}
 }
-@keyframes ombraLembo{0%,45%{opacity:0}100%{opacity:1}}
-.scena.apri_busta .busta-flap-wrap{
-  animation:apriLembo 1.1s cubic-bezier(.45,.05,.55,.95) forwards;
+@keyframes ombraLembo{
+  0%{opacity:0;animation-timing-function:cubic-bezier(.45,0,.75,.55)}
+  55%,100%{opacity:1}
 }
-.scena.apri_busta .busta-flap::after{animation:ombraLembo 1.1s ease forwards}
+.scena.apri_busta .busta-flap-wrap{animation:apriLembo 1.2s forwards}
+.scena.apri_busta .busta-flap::after{animation:ombraLembo 1.2s forwards}
 
 .busta-intestazione{
   position:absolute;left:50%;top:10%;transform:translateX(-50%);z-index:5;
@@ -236,6 +263,8 @@ body.no-scroll{overflow:hidden;height:100svh}
 .scena.apri_busta .wax::after{animation:none;opacity:0}
 .wax:hover{transform:translate(-50%,-50%) scale(1.05)}
 .wax:active,.wax.premuto{transform:translate(-50%,-50%) scale(.92);transition-duration:.12s}
+/* rilasciato, il sigillo torna su con un piccolo rimbalzo mentre il lembo si alza */
+.scena.apri_busta .wax{transition:transform .55s var(--ease-molla)}
 .wax:focus-visible{outline:2px dashed var(--accento-testo);outline-offset:5px}
 
 /* nome e invito ad aprire, sotto il sigillo */
@@ -272,11 +301,15 @@ body.no-scroll{overflow:hidden;height:100svh}
 .scena.pronta .pill-apri{animation:suCentro 1s 1s cubic-bezier(.22,1,.36,1) backwards}
 .pill-apri:active{background:rgba(255,255,255,.85)}
 
+/* I testi escono prima e piu' in fretta di quanto erano entrati: lasciano la scena al lembo. */
 .scena.apri_busta .busta-intestazione,
 .scena.apri_busta .busta-nomi,
 .scena.apri_busta .pill-apri{
-  opacity:0;transform:translate(-50%,10px);pointer-events:none;
+  opacity:0;transform:translate(-50%,8px);pointer-events:none;
+  transition:opacity .3s var(--ease-in),transform .3s var(--ease-in);
 }
+.scena.apri_busta .busta-nomi{transition-delay:.04s}
+.scena.apri_busta .pill-apri{transition-delay:.08s}
 
 @media (max-width:520px){
   html:has(body.no-scroll){background-color:var(--carta-piena)}
@@ -309,7 +342,8 @@ body.no-scroll{overflow:hidden;height:100svh}
   position:relative;z-index:10;
   max-width:640px;margin:0 auto;padding:0 1.4rem calc(5rem + env(safe-area-inset-bottom));
   opacity:0;transform:translateY(24px);
-  transition:opacity 1.1s ease, transform 1.1s ease;
+  /* parte poco dopo la busta: niente doppia esposizione tra biglietto e titolo */
+  transition:opacity .9s .3s ease-out, transform 1.3s .2s var(--ease-out);
 }
 .invito.dentro{opacity:1;transform:none}
 
