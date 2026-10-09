@@ -69,8 +69,6 @@
   testo("#firmaSposi", `${W.sposo} & ${W.sposa}`);
   testo("#dataTesto", W.dataTesto);
   testo("#oraTesto", W.oraTesto);
-  testo("#bustaData", W.dataBreve || "");
-  testo("#letterData", W.dataBreve || "");
   testo("#salutoTop", ospite.saluto);
   // Dress code: sezione sospesa (vedi index.html). W.dressCode resta in config.js.
   // testo("#dressCode", W.dressCode);
@@ -283,7 +281,6 @@
   let aperto = false;
 
   testo("#bustaNomi", `${W.sposo} & ${W.sposa}`);
-  testo("#letterNomi", `${W.sposo} & ${W.sposa}`);
 
   const metaTema = $('meta[name="theme-color"]');
   // Colori della palette attiva (definiti in style.css, sezione TEMI)
@@ -315,30 +312,35 @@
     invito.hidden = false;
     const k = riduci ? 0.3 : 1;          // con "riduci movimento" la sequenza e' molto piu' breve
     const dopo = (ms, fn) => setTimeout(fn, ms * k);
+    // Durata dell'intera apertura: la decide style.css (--apertura), qui la si segue.
+    const T = (parseFloat(getComputedStyle(scena).getPropertyValue("--apertura")) || 6) * 1000;
+    const PRESSIONE = 120;
+    const DISSOLVENZA = PRESSIONE + T * 0.87;   // dopo la pausa sulla busta aperta
 
     // 1. il sigillo si schiaccia sotto il dito (e su Android una vibrazione leggera)
     sigillo.classList.add("premuto");
     if (navigator.vibrate) navigator.vibrate(12);
     // 2. al rilascio parte la coreografia di style.css, tutta su una sola classe:
-    //    testi via (0-0,4 s), lembo visibile (0-0,6 s), biglietto che sale (da 0,36 s)
-    dopo(120, () => { sigillo.classList.remove("premuto"); scena.classList.add("apri_busta"); });
-    // 3. il biglietto resta un attimo da leggere, poi la busta si dissolve sull'invito
-    dopo(2000, () => {
+    //    sigillo che si accende, onda dorata sui decori, lembi che si aprono sulla luce
+    dopo(PRESSIONE, () => { sigillo.classList.remove("premuto"); scena.classList.add("apri_busta"); });
+    // 3. la busta aperta resta un attimo, poi si dissolve sull'invito con un bagliore
+    dopo(DISSOLVENZA, () => {
       invito.classList.add("dentro");
       scena.classList.add("via");
       petali();
     });
     // 4. a meta' dissolvenza le barre del browser passano dal colore carta al verde
-    dopo(2350, () => {
+    dopo(DISSOLVENZA + 350, () => {
       document.body.classList.remove("no-scroll");
       if (metaTema) metaTema.content = VERDE;
     });
-    dopo(2800, () => { scena.style.display = "none"; });
+    dopo(DISSOLVENZA + 800, () => { scena.style.display = "none"; });
   }
 
   document.body.classList.add("no-scroll");
   sigillo.addEventListener("click", apri);
-  $("#bustaCta").addEventListener("click", apri);
+  const bustaCta = $("#bustaCta");
+  if (bustaCta) bustaCta.addEventListener("click", apri);
 
   /* ---------- 8. Comparsa sezioni allo scroll ---------- */
   const io = new IntersectionObserver((voci) => {

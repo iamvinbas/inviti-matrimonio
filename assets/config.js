@@ -22,7 +22,7 @@ window.WEDDING = {
   dataISO: "2027-07-02T16:30:00+02:00",
   dataTesto: "Venerdì 2 luglio 2027",
   oraTesto: "ore 16:30",
-  dataBreve: "02 · 07 · 2027", // mostrata sul biglietto dentro la busta
+  dataBreve: "02 · 07 · 2027", // al momento non mostrata (la busta non ha piu' il biglietto)
 
   cerimonia: {
     titolo: "La cerimonia",

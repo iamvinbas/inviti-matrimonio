@@ -1,7 +1,7 @@
 # Partecipazione di nozze digitale 
 
 Sito statico su GitHub Pages. Zero costi, zero backend.
-Si apre tirando il fiocco.
+Si apre toccando il sigillo di ceralacca sulla busta.
 
 **Online:** https://iamvinbas.github.io/inviti-matrimonio/
 
@@ -50,6 +50,8 @@ Conseguenze:
 | `assets/style.css` | grafica e animazioni |
 | `assets/app.js` | logica (apertura busta, countdown, RSVP) |
 | `assets/config.js` | **dati del matrimonio** — date, luoghi, IBAN, numero WhatsApp |
+| `assets/decori/` | decori floreali in rilievo della busta (maschere SVG, il colore lo dà il tema) |
+| `tools/decori-busta.mjs` | rigenera `assets/decori/` (`node tools/decori-busta.mjs`) |
 | `tools/invitati.csv` | **elenco invitati** (privato, non su GitHub) |
 | `tools/genera.mjs` | genera i link personalizzati |
 | `tools/pubblica.sh` | pubblica su GitHub Pages gestendo la cache |
@@ -127,6 +129,14 @@ python3 -m http.server 4321
 ```
 
 Apri uno dei link di `tools/link-generati.csv` sostituendo il dominio con `http://localhost:4321`.
+
+## Apertura della busta
+
+La coreografia (sigillo che si accende, onda dorata sui decori, lembi che si
+aprono sulla luce, dissolvenza sull'invito) è tutta in `assets/style.css`,
+sezione "SCENA 1". Le fasi sono percentuali di un'unica durata, `--apertura`
+(6s): per rallentare o accelerare tutto si cambia solo quel valore, `app.js`
+lo legge da lì.
 
 ## Note
 
