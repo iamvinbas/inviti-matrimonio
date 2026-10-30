@@ -77,12 +77,14 @@ window.WEDDING = {
   },
 
   canzone: {
-    titolo: "Young and Beautiful",
-    artista: "Lana Del Rey",
-    link: "https://open.spotify.com/track/2nMeu6UenVvwUktBCpLMK9",
+    titolo: "Wildest Dreams",
+    artista: "Duomo (cover di Taylor Swift, da Bridgerton)",
+    // Nessun link Spotify verificato per questa versione: aggiungilo se ne trovi uno.
+    link: "",
     // Inserire qui il percorso di un file audio ottenuto legalmente.
-    audio: "assets/Lana Del Rey - Young and Beautiful_320k.mp3",
-    inizio: 13,
+    audio: "assets/Duomo - Wildest Dreams (Bridgerton Cover)_320k.mp3",
+    // Punto di partenza in secondi: 0 = dall'inizio. Regola dopo averla ascoltata.
+    inizio: 0,
   },
   // Percorso relativo della foto del brindisi, da inserire quando sarà disponibile.
   fotoBrindisi: "",
