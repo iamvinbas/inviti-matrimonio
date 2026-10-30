@@ -208,7 +208,8 @@
     staContando = true;
     const t0 = performance.now(), durata = 1500;
     (function passo(t) {
-      const k = Math.min(1, (t - t0) / durata), e = 1 - Math.pow(1 - k, 3);
+      // Il timestamp del primo frame può precedere t0: senza max(0) uscirebbero cifre negative.
+      const k = Math.max(0, Math.min(1, (t - t0) / durata)), e = 1 - Math.pow(1 - k, 3);
       valori().forEach((x, i) => { nums[i].textContent = due(Math.round(x * e)); });
       if (k < 1) requestAnimationFrame(passo);
       else staContando = false;
@@ -338,9 +339,9 @@
   }
 
   document.body.classList.add("no-scroll");
-  sigillo.addEventListener("click", apri);
-  const bustaCta = $("#bustaCta");
-  if (bustaCta) bustaCta.addEventListener("click", apri);
+  // "Tocca il sigillo" è solo un invito: qualsiasi tocco sulla busta la apre.
+  // Il click sul sigillo (anche da tastiera) risale fino alla scena.
+  scena.addEventListener("click", apri);
 
   /* ---------- 8. Comparsa sezioni allo scroll ---------- */
   const io = new IntersectionObserver((voci) => {

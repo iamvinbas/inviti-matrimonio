@@ -77,12 +77,12 @@ window.WEDDING = {
   },
 
   canzone: {
-    titolo: "Theme King",
-    artista: "Bridgerton (colonna sonora)",
+    titolo: "Bridgerton",
+    artista: "The Harmony Group",
     // Nessun link Spotify verificato per questa versione: aggiungilo se ne trovi uno.
     link: "",
     // Inserire qui il percorso di un file audio ottenuto legalmente.
-    audio: "assets/Bridgerton-Theme King.mp3",
+    audio: "assets/Bridgerton-The Harmony Group.mp3",
     // Punto di partenza in secondi: 0 = dall'inizio. Regola dopo averla ascoltata.
     inizio: 0,
   },
