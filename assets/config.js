@@ -77,12 +77,12 @@ window.WEDDING = {
   },
 
   canzone: {
-    titolo: "Main Title Theme",
-    artista: "Bridgerton (colonna sonora originale)",
+    titolo: "Theme King",
+    artista: "Bridgerton (colonna sonora)",
     // Nessun link Spotify verificato per questa versione: aggiungilo se ne trovi uno.
     link: "",
     // Inserire qui il percorso di un file audio ottenuto legalmente.
-    audio: "assets/Bridgerton - Main Title Theme_320k.mp3",
+    audio: "assets/Bridgerton-Theme King.mp3",
     // Punto di partenza in secondi: 0 = dall'inizio. Regola dopo averla ascoltata.
     inizio: 0,
   },
