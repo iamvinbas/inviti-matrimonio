@@ -77,12 +77,12 @@ window.WEDDING = {
   },
 
   canzone: {
-    titolo: "Wildest Dreams",
-    artista: "Duomo (cover di Taylor Swift, da Bridgerton)",
+    titolo: "Main Title Theme",
+    artista: "Bridgerton (colonna sonora originale)",
     // Nessun link Spotify verificato per questa versione: aggiungilo se ne trovi uno.
     link: "",
     // Inserire qui il percorso di un file audio ottenuto legalmente.
-    audio: "assets/Duomo - Wildest Dreams (Bridgerton Cover)_320k.mp3",
+    audio: "assets/Bridgerton - Main Title Theme_320k.mp3",
     // Punto di partenza in secondi: 0 = dall'inizio. Regola dopo averla ascoltata.
     inizio: 0,
   },
