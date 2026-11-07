@@ -732,6 +732,10 @@ code.pensiero-valore{-webkit-user-select:all;user-select:all}
 }
 @keyframes riflesso{0%{transform:translateX(-160%) skewX(-18deg)}28%,100%{transform:translateX(280%) skewX(-18deg)}}
 .btn-secondario{background:transparent;color:var(--accento-testo)}
+/* RSVP: stessa larghezza per i due bottoni, "Ci sarò" un po' piu' grande perche' e' la risposta principale */
+.azioni-rsvp{display:grid;grid-template-columns:1fr;gap:.9rem;width:min(100%,20rem);margin-inline:auto}
+.azioni-rsvp .btn{display:block;text-align:center}
+.azioni-rsvp #btnSi{font-size:1.2rem;padding:1.3rem 1.8rem;letter-spacing:.16em}
 .btn-ghost{
   background:none;border:0;cursor:pointer;color:var(--testo);
   font-family:var(--titolo);text-transform:uppercase;letter-spacing:.1em;font-size:1.02rem;
