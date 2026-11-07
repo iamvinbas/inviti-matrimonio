@@ -16,6 +16,7 @@
   --accento-testo:rgb(var(--accento-testo-rgb));
   --su-accento:#14201a;     /* testo sopra il bottone pieno */
   --velo:255 255 255;       /* riquadri trasparenti (IBAN): bianco su scuro, nero su chiaro */
+  --pannello:rgb(255 255 255 / .04); /* fondo delle card (luoghi, pensieri) */
   --toast-fondo:#f5f0e6;
   --toast-testo:#2a2724;
   /* --- busta (prima scena) --- */
@@ -635,7 +636,43 @@ body.no-scroll{overflow:hidden;height:100svh}
 .cd-lab{font-family:var(--titolo);text-transform:uppercase;letter-spacing:.06em;font-size:1rem;opacity:.88}
 
 /* luoghi */
-.luoghi{display:grid;gap:2.4rem}
+.luoghi{display:grid;gap:2.8rem}
+/* angoli tagliati a 45 gradi: --t e' la misura del taglio */
+.taglio{
+  clip-path:polygon(var(--t) 0,calc(100% - var(--t)) 0,100% var(--t),100% calc(100% - var(--t)),
+    calc(100% - var(--t)) 100%,var(--t) 100%,0 calc(100% - var(--t)),0 var(--t));
+}
+/* l'ombra va sul contenitore: clip-path taglierebbe quella degli elementi */
+.luogo{filter:drop-shadow(0 16px 22px rgb(var(--ombra) / .16))}
+.luogo-foto{margin:0 auto;max-width:23rem}
+/* cornice a strati: filetto oro, striscia carta, filetto oro, foto.
+   Ad ogni strato il taglio si riduce di padding x 0,414, cosi' i filetti restano paralleli. */
+.cornice{--t:28px;background:rgb(var(--accento-rgb) / .9);padding:1px}
+.cornice-carta{--t:27.6px;background:var(--lembo-1);padding:8px}
+.cornice-oro{--t:24.3px;background:rgb(var(--accento-rgb) / .9);padding:1px}
+.foto{--t:23.9px;position:relative;aspect-ratio:4/5;overflow:hidden}
+.foto img{
+  display:block;width:100%;height:100%;object-fit:cover;
+  filter:saturate(.88) contrast(.96) brightness(1.03);
+  transform:scale(1.1);transition:transform 2.2s var(--ease-out);
+}
+.visto .foto img{transform:scale(1)}
+/* velo caldo e sfumatura verso il basso, dove arriva il cartiglio */
+.foto::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(120% 85% at 50% 35%,transparent 55%,rgb(var(--seppia) / .16) 100%),
+    linear-gradient(to bottom,transparent 55%,color-mix(in srgb,var(--lembo-1) 55%,transparent) 100%);
+}
+/* cartiglio: stesso taglio, filetto oro sottile, sale sulla parte bassa della foto */
+.cartiglio{
+  --t:18px;position:relative;z-index:1;
+  width:88%;max-width:20.5rem;margin:-4.2rem auto 0;padding:1px;   /* sempre piu' stretto della foto (23rem) */
+  background:rgb(var(--accento-rgb) / .75);
+}
+.cartiglio.solo{margin-top:0}
+.cartiglio-dentro{--t:17.6px;background:var(--lembo-1);padding:1.6rem 1.1rem 1.2rem}
+.cartiglio-dentro .btn-ghost{margin-top:.2rem}
 .luogo h4{font-family:var(--titolo);font-size:1.3rem;letter-spacing:.1em;margin:0 0 .3rem}
 .luogo .ora{color:var(--accento-testo);font-family:var(--titolo);letter-spacing:.12em;font-size:1.12rem}
 .luogo .ind{opacity:.92;font-size:1.22rem;margin:.2rem 0 .8rem}
@@ -650,17 +687,28 @@ body.no-scroll{overflow:hidden;height:100svh}
 .tl-tit{display:block}
 .tl-nota{display:block;font-size:1.05rem;opacity:.82}
 
-/* iban */
-.iban{margin:1.2rem 0 0;display:flex;flex-direction:column;align-items:center;gap:.7rem}
-.iban code{
-  font-family:var(--titolo);letter-spacing:.08em;font-size:clamp(1rem,4.4vw,1.15rem);
-  background:rgb(var(--velo) / .05);padding:.6rem .9rem;border-radius:3px;
-  border:1px solid rgb(var(--accento-testo-rgb) / .2);
-  max-width:100%;overflow-wrap:anywhere;
-  -webkit-user-select:all;user-select:all;
+/* un pensiero: bonifico e lista viaggi sono due scelte equivalenti, card identiche */
+.pensieri{display:grid;gap:1rem;grid-auto-rows:1fr;margin-top:1.6rem}
+.pensiero{
+  display:flex;flex-direction:column;align-items:center;gap:.55rem;
+  padding:1.5rem 1.1rem;background:var(--pannello);
+  border:1px solid rgb(var(--accento-rgb) / .35);border-radius:18px;
 }
-.lista-viaggi{margin-top:1.2rem}
-.lista-viaggi strong{font-weight:400;color:var(--accento-testo)}
+.pensiero[hidden]{display:none}
+.pensiero-tipo{
+  margin:0;font-family:var(--titolo);text-transform:uppercase;
+  letter-spacing:.14em;font-size:1rem;color:var(--accento-testo);
+}
+.pensiero-valore{
+  width:100%;font-family:var(--titolo);font-weight:400;letter-spacing:.06em;
+  font-size:clamp(1.05rem,4.6vw,1.2rem);color:var(--testo);
+  background:rgb(var(--velo) / .04);padding:.65rem .9rem;border-radius:8px;
+  border:1px solid rgb(var(--accento-testo-rgb) / .22);overflow-wrap:anywhere;
+}
+code.pensiero-valore{-webkit-user-select:all;user-select:all}
+.pensiero-dett{margin:0;font-size:1.08rem;opacity:.88;line-height:1.45}
+.pensiero-dett:empty{display:none}
+.pensiero .btn-ghost{margin-top:auto}
 .foto-brindisi{margin:1.8rem auto 0;max-width:34rem;border:1px solid rgb(var(--accento-testo-rgb) / .2);padding:.35rem}
 .foto-brindisi img{display:block;width:100%;height:auto;max-height:26rem;object-fit:cover}
 
@@ -706,7 +754,7 @@ body.no-scroll{overflow:hidden;height:100svh}
 .toast.su{transform:translate(-50%,0)}
 
 @media (min-width:620px){
-  .luoghi{grid-template-columns:1fr 1fr;gap:2rem;text-align:center}
+  .pensieri{grid-template-columns:1fr 1fr}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;animation-delay:0s !important;transition-duration:.18s !important;transition-delay:0s !important}
@@ -875,6 +923,32 @@ body.no-scroll{overflow:hidden;height:100svh}
   --luce-rgb:255 230 160; --fodera-luce:#fff4cf; --fodera:#f3cb68; --fodera-scuro:#c8963a;
   --sigillo:url("sigilli/oliva.webp");
   --petali:240,222,156|232,211,138|200,205,150|255,252,235;
+}
+
+/* Verde salvia/oliva chiaro + oro antico — scelto dagli sposi: piu' chiaro del verde oliva.
+   Busta e sigillo restano quelli di "oliva"; cambia la pagina dell'invito.
+   Contrasti per lettori con vista debole: testo 11:1, titoli 7:1, bottone 5:1. */
+:root[data-tema="oliva-chiaro"]{
+  --fondo:#e6ead8; --fondo-alto:#f4f6ec; --fondo-basso:#d5dcc2;
+  --testo:#2d3320;
+  --accento-rgb:128 108 46; --accento-testo-rgb:74 90 48; --su-accento:#fffdf4;
+  --velo:0 0 0; --toast-fondo:#2d3320; --toast-testo:#f4f6ec;
+  --pannello:rgb(255 255 250 / .55);
+  --scena-luce:rgba(255,255,240,.6); --scena-fondo:#b7c19c; --scena-basso:#8d9a6f;
+  --carta-1:#f9f2dd; --carta-2:#e7d9b0; --carta-piena:#f0e6c8;
+  --lembo-1:#fdf8e9; --lembo-2:#ecdfba;
+  --seppia:110 98 52; --ombra:50 54 30; --filetto:160 146 90;
+  --busta-testo:#6e6436; --busta-nomi:#3e4228; --busta-cta:#3e4228;
+  --luce-rgb:255 230 160; --fodera-luce:#fff4cf; --fodera:#f3cb68; --fodera-scuro:#c8963a;
+  --sigillo:url("sigilli/oliva.webp");
+  --petali:128,108,46|150,168,112|255,255,248|205,190,135;
+}
+/* rametto d'ulivo sopra ogni titolo di sezione */
+:root[data-tema="oliva-chiaro"] .blocco .titolo::before{
+  content:"";display:block;width:96px;height:20px;margin:0 auto .9rem;
+  background:rgb(var(--accento-rgb) / .85);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 24'%3E%3Cpath d='M6 12h108' stroke='%23000' stroke-width='1.3'/%3E%3Cg%3E%3Cellipse cx='22' cy='7.5' rx='7' ry='2.6' transform='rotate(-24 22 7.5)'/%3E%3Cellipse cx='36' cy='16.5' rx='7' ry='2.6' transform='rotate(24 36 16.5)'/%3E%3Cellipse cx='44' cy='7.5' rx='6' ry='2.3' transform='rotate(-24 44 7.5)'/%3E%3Cellipse cx='98' cy='7.5' rx='7' ry='2.6' transform='rotate(24 98 7.5)'/%3E%3Cellipse cx='84' cy='16.5' rx='7' ry='2.6' transform='rotate(-24 84 16.5)'/%3E%3Cellipse cx='76' cy='7.5' rx='6' ry='2.3' transform='rotate(24 76 7.5)'/%3E%3Cpath d='M60 6l4 6-4 6-4-6z'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 24'%3E%3Cpath d='M6 12h108' stroke='%23000' stroke-width='1.3'/%3E%3Cg%3E%3Cellipse cx='22' cy='7.5' rx='7' ry='2.6' transform='rotate(-24 22 7.5)'/%3E%3Cellipse cx='36' cy='16.5' rx='7' ry='2.6' transform='rotate(24 36 16.5)'/%3E%3Cellipse cx='44' cy='7.5' rx='6' ry='2.3' transform='rotate(-24 44 7.5)'/%3E%3Cellipse cx='98' cy='7.5' rx='7' ry='2.6' transform='rotate(24 98 7.5)'/%3E%3Cellipse cx='84' cy='16.5' rx='7' ry='2.6' transform='rotate(-24 84 16.5)'/%3E%3Cellipse cx='76' cy='7.5' rx='6' ry='2.3' transform='rotate(24 76 7.5)'/%3E%3Cpath d='M60 6l4 6-4 6-4-6z'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 /* Lettori con vista debole su telefono: countdown su 2 colonne,

@@ -106,11 +106,21 @@
   }
 
   // Luoghi
-  const luogoHTML = (l) => `
-    <p class="ora">${l.ora}</p>
-    <h4>${l.titolo}</h4>
-    <p class="ind">${l.luogo}<br>${l.indirizzo}</p>
-    <a class="btn-ghost" href="${l.maps}" target="_blank" rel="noopener">Apri in mappe</a>`;
+  // Foto del luogo in cornice art deco (angoli tagliati, doppio filetto oro) e,
+  // sovrapposto in basso, un cartiglio con gli stessi angoli che porta il testo.
+  const luogoFoto = (l) => !l.foto ? "" : `
+    <figure class="luogo-foto">
+      <div class="cornice taglio"><div class="cornice-carta taglio"><div class="cornice-oro taglio">
+        <div class="foto taglio"><img src="${l.foto}" alt="${l.luogo}" loading="lazy" decoding="async"${l.fotoPos ? ` style="object-position:${l.fotoPos}"` : ""}></div>
+      </div></div></div>
+    </figure>`;
+  const luogoHTML = (l) => `${luogoFoto(l)}
+    <div class="cartiglio taglio${l.foto ? "" : " solo"}"><div class="cartiglio-dentro taglio">
+      <p class="ora">${l.ora}</p>
+      <h4>${l.titolo}</h4>
+      <p class="ind">${l.luogo}<br>${l.indirizzo}</p>
+      <a class="btn-ghost" href="${l.maps}" target="_blank" rel="noopener">Apri in mappe</a>
+    </div></div>`;
   $("#luogoCerimonia").innerHTML = luogoHTML(W.cerimonia);
   $("#luogoRicevimento").innerHTML = luogoHTML(W.ricevimento);
 
@@ -139,11 +149,7 @@
       } else {
         linkLista.remove();
       }
-      if (W.regalo.listaViaggi.indirizzo) {
-        const indirizzo = document.createElement("span");
-        indirizzo.textContent = ` · ${W.regalo.listaViaggi.indirizzo}`;
-        $("#listaViaggiNome").appendChild(indirizzo);
-      }
+      testo("#listaViaggiIndirizzo", W.regalo.listaViaggi.indirizzo || "");
     }
   } else {
     $("#regaloBox").remove();

@@ -13,8 +13,9 @@ window.WEDDING = {
      "champagne"   bianco Cloud Dancer + champagne
      "prugna"      prugna + lilla
      "oliva"       verde oliva + giallo burro
+     "oliva-chiaro" verde salvia/oliva chiaro + oro antico (scelto dagli sposi)
      Per provarle senza toccare questo file: aggiungi ?tema=nome al link. */
-  tema: "oliva",
+  tema: "oliva-chiaro",
 
   sposa: "Tiziana",
   sposo: "Gaetano",
@@ -30,6 +31,8 @@ window.WEDDING = {
     luogo: "Duomo S. Corrado",
     indirizzo: "Via Chiesa Vecchia, 70056 Molfetta (BA)",
     maps: "https://www.google.com/maps/search/?api=1&query=Duomo+San+Corrado%2C+Via+Chiesa+Vecchia%2C+Molfetta",
+    foto: "assets/luoghi/cerimonia-duomo.jpg",
+    fotoPos: "24% 50%",   // quale parte della foto inquadrare nella cornice (orizzontale verticale)
   },
   ricevimento: {
     titolo: "Il ricevimento",
@@ -37,6 +40,7 @@ window.WEDDING = {
     luogo: "Villa Ciardi",
     indirizzo: "Via Sant'Andrea 210/208/206, 76011 Bisceglie (BT)",
     maps: "https://www.google.com/maps/search/?api=1&query=Villa+Ciardi%2C+Via+Sant%27Andrea+210%2F208%2F206%2C+Bisceglie",
+    foto: "assets/luoghi/ricevimento-villa-ciardi.jpg",
   },
 
   programma: [
